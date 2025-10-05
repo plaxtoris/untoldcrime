@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+jinja2
+pandas
+numpy
+pydub
+tqdm
+requests
+python-multipart
+google-cloud-texttospeech
+google-cloud-storage
+mutagen
+pillow

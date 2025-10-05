@@ -1,0 +1,15 @@
+{
+    "black-formatter.args": [
+        "--line-length=180"
+    ],
+    "editor.rulers": [
+        180
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true
+    },
+    "editor.formatOnSave": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+}

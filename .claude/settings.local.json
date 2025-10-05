@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3:*)",
+      "Bash(timeout:*)",
+      "Bash(curl:*)",
+      "Bash(touch:*)",
+      "Bash(grep:*)",
+      "Bash(sqlite3:*)",
+      "Bash(python:*)",
+      "Bash(pip install:*)",
+      "Bash(find:*)",
+      "Bash(rm:*)",
+      "Bash(ls:*)",
+      "Bash(cp:*)",
+      "Bash(echo:*)",
+      "Bash(uvicorn:*)",
+      "Bash(mkdir:*)",
+      "Bash(netstat:*)",
+      "Bash(pkill:*)"
+    ],
+    "deny": []
+  }
+}

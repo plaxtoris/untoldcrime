@@ -1,0 +1,13 @@
+**/__pycache__
+tmp.py
+.DS_Store
+*.pem
+*.xlsx
+.env
+*.~lock*
+**/.venv
+**/ollama
+**/data/
+**/vm/
+google.json
+src/templates/index.html.bak

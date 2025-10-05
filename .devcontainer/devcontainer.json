@@ -1,0 +1,30 @@
+{
+	"name": "untoldcrime",
+	"dockerFile": "../Dockerfile",
+	"features": {
+		"ghcr.io/devcontainers/features/node:1": {
+			"version": "lts"
+		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"mhutchie.git-graph",
+				"njzy.stats-bar",
+				"ms-python.black-formatter"
+			]
+		}
+	},
+	"runArgs": [
+		"--privileged",
+		"--network=host"
+	],
+	"mounts": [
+		"source=${localEnv:HOME}/.ssh/github-plx,target=/root/.ssh/id_rsa,type=bind,consistency=cached"
+	],
+	"postCreateCommand": "chmod 600 /root/.ssh/id_rsa && npm install -g @anthropic-ai/claude-code && npm install -g ccusage",
+	"remoteEnv": {
+		"PATH": "/usr/local/bin:${containerEnv:PATH}"
+	}
+}

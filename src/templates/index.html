@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+
+    <!-- google adsense-->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9132200753480301"
+        crossorigin="anonymous"></script>
+
+    <!-- google analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N683YEPLY8"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-N683YEPLY8');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kostenlose Kinderbücher ohne Registrierung - Zauberohren bietet Geschichten und Hörbücher für Kinder ohne Anmeldung mit nur einem Klick. Perfekt für abends im Bett am Smartphone oder auf langen Autofahrten. Geschichten über Drachen, Hexen, Dinosaurier, Elfen, Gespenster und vieles mehr.">
+    <meta name="keywords" content="kostenlose kinderbücher, kinderhörbücher kostenlos, geschichten für kinder, ohne anmeldung, ohne registrierung, drachen geschichten, hexen märchen, dinosaurier geschichten, elfen märchen, gespenster geschichten, gute nacht geschichten, einschlafgeschichten, hörbücher kinder, autofahrt kinder, smartphone geschichten, tablet hörbücher, zauberohren">
+    <meta name="author" content="Zauberohren">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Zauberohren - Kostenlose Kinderbücher ohne Registrierung">
+    <meta property="og:description" content="Kostenlose Geschichten und Hörbücher für Kinder - ohne Anmeldung, mit nur einem Klick. Perfekt für unterwegs und zum Einschlafen.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zauberohren.de">
+    <meta name="theme-color" content="#5B63F5">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Zauberohren">
+    <title>Kostenlose Kinderbücher ohne Registrierung | Zauberohren - Geschichten für Kinder</title>
+    
+    <!-- DNS-Prefetch und Preconnect für externe Ressourcen -->
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
+    <link rel="preconnect" href="https://www.googletagmanager.com">
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+    
+    <!-- Preload kritische Ressourcen -->
+    <link rel="preload" href="/static/style.css" as="style">
+    <link rel="preload" href="/static/logo.png" as="image" fetchpriority="high">
+    <link rel="preload" href="/static/font.ttf" as="font" type="font/ttf" crossorigin>
+    
+    <!-- Kritisches CSS inline für schnelleres FCP -->
+    <style>
+        :root {
+            --primary-color: #E8B882;
+            --primary-hover: #D4A770;
+            --text-primary: #1F2937;
+            --text-secondary: #E8B882;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F9FAFB;
+            --border-color: #E5E7EB;
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --header-height: 72px;
+            --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+        body { font-family: var(--font-sans); font-size: 1rem; line-height: 1.5; color: var(--text-primary); background: #000; min-height: 100vh; overflow: hidden; }
+        h1 { font-weight: 600; line-height: 1.25; }
+        #player-header { position: fixed; top: 0; z-index: 1000; background: rgba(0, 0, 0, 0.25); backdrop-filter: blur(20px) saturate(120%); -webkit-backdrop-filter: blur(20px) saturate(120%); border-bottom: 1px solid rgba(255, 255, 255, 0.1); height: var(--header-height); width: 100%; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
+        .logo-container { display: flex; align-items: center; gap: 0.75rem; }
+        .logo { height: 48px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3)); }
+        .title-container h1 { font-size: 1.5rem; color: var(--primary-color); margin: 0; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); }
+        .subtitle { display: none; }
+        .hidden { display: none !important; }
+        /* Burger Menu für Mobile */
+        .burger-menu { display: none; background: transparent; border: none; cursor: pointer; padding: 0.5rem; position: relative; width: 40px; height: 40px; }
+        .burger-line { display: block; position: absolute; width: 24px; height: 3px; background: var(--primary-color); transition: all 200ms ease; border-radius: 2px; left: 8px; }
+        .burger-line:nth-child(1) { transform: translateY(-8px); }
+        .burger-line:nth-child(2) { transform: translateY(0); }
+        .burger-line:nth-child(3) { transform: translateY(8px); }
+        .header-links { display: flex; align-items: center; gap: 1rem; }
+        .header-links a { color: rgba(255, 255, 255, 0.9); text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); }
+        @media (max-width: 768px) { .burger-menu { display: flex; } .header-links { display: none; } }
+    </style>
+    
+    <link rel="manifest" href="/static/manifest.json">
+    <!-- Dynamic icons generated from single source -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon/180.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon/32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icon/16.png">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <header id="player-header">
+        <div class="header-top">
+            <div class="logo-container">
+                <img src="/static/logo.png" alt="Zauberohren Logo" class="logo" loading="eager" fetchpriority="high">
+                <div class="title-container">
+                    <h1>Zauberohren</h1>
+                    <span class="subtitle">Geschichten für dich</span>
+                </div>
+            </div>
+            <button class="burger-menu" id="burger-menu" aria-label="Menü öffnen" type="button">
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+                <span class="burger-line"></span>
+            </button>
+            <nav class="header-links" id="nav-menu" role="navigation" aria-label="Hauptnavigation">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/about" class="nav-link">Über uns</a>
+                <a href="/impressum" class="nav-link">Impressum</a>
+                <a href="/admin" class="nav-link">Login</a>
+            </nav>
+        </div>
+    </header>
+    
+    <main role="main">
+        <!-- SEO Content für Suchmaschinen -->
+        <div class="seo-content" style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;">
+            <h1>Kostenlose Kinderbücher und Hörbücher ohne Registrierung</h1>
+            <p>Zauberohren - Die beste Plattform für kostenlose Kinderbücher ohne Anmeldung. Mit nur einem Klick zu spannenden Geschichten!</p>
+            <h2>Perfekt für jede Gelegenheit</h2>
+            <ul>
+                <li>Abends im Bett am Smartphone - Gute Nacht Geschichten zum Einschlafen</li>
+                <li>Auf langen Autofahrten - Unterhaltung für Kinder unterwegs</li>
+                <li>Tablet und Smartphone optimiert - Super intuitiv zu bedienen</li>
+                <li>Keine Registrierung erforderlich - Sofort loslegen</li>
+                <li>Ohne Anmeldung - Kostenlos und unkompliziert</li>
+            </ul>
+            <h2>Unsere beliebten Geschichten-Themen</h2>
+            <ul>
+                <li>Drachen Geschichten - Spannende Abenteuer mit feuerspeienden Drachen</li>
+                <li>Hexen Märchen - Zauberhafte Geschichten aus der Welt der Magie</li>
+                <li>Dinosaurier Geschichten - Reise in die Urzeit zu T-Rex und Triceratops</li>
+                <li>Elfen Märchen - Fantastische Abenteuer im Elfenreich</li>
+                <li>Gespenster Geschichten - Gruselige aber kindgerechte Spukgeschichten</li>
+                <li>Prinzessinnen Märchen - Königliche Abenteuer und Traumschlösser</li>
+                <li>Piraten Geschichten - Schatzsuche auf hoher See</li>
+                <li>Ritter Geschichten - Tapfere Helden und edle Taten</li>
+                <li>Tier Geschichten - Abenteuer aus dem Tierreich</li>
+                <li>Weltraum Geschichten - Reisen zu fernen Planeten</li>
+                <li>Unterwasser Abenteuer - Entdecke die Geheimnisse der Meere</li>
+                <li>Zauberer Geschichten - Magische Abenteuer und Zaubertricks</li>
+            </ul>
+            <h2>Warum Zauberohren?</h2>
+            <p>Kostenlose Kinderhörbücher ohne Registrierung - das ist unser Versprechen. Keine versteckten Kosten, keine Anmeldung. Einfach nur gute Geschichten für Kinder. Perfekt für Eltern, die ihren Kindern schnell und unkompliziert eine Geschichte vorspielen möchten. Ob als Einschlafhilfe, zur Unterhaltung auf Reisen oder einfach zum Spaß - Zauberohren ist immer die richtige Wahl.</p>
+            <p>Unsere Geschichten sind speziell für Kinder entwickelt und altersgerecht aufbereitet. Von spannenden Abenteuern über lustige Tiergeschichten bis hin zu beruhigenden Einschlafgeschichten - bei uns finden Sie für jeden Anlass die passende Geschichte.</p>
+        </div>
+
+        <div id="theme-carousel" class="theme-carousel">
+            <div class="swipe-indicator left">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+            </div>
+            <div class="swipe-indicator right">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z"/>
+                </svg>
+            </div>
+            <div id="themes-container" class="themes-container">
+                <!-- Theme cards will be generated here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- google adsense - add placement -->
+    <ins class="adsbygoogle"
+        style="display:block"
+        data-ad-client="ca-pub-9132200753480301"
+        data-ad-slot="9323593032"
+        data-ad-format="auto"
+        data-full-width-responsive="true"></ins>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    
+    <audio id="audio-element" preload="metadata"></audio>
+    
+    <script defer src="/static/utils.js"></script>
+    <script defer src="/static/burger-menu.js"></script>
+    <script defer src="/static/main.js"></script>
+    
+    <script>
+        // Service Worker mit Verzögerung registrieren, um Initial Load nicht zu blockieren
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // 2 Sekunden warten nach Page Load
+                setTimeout(() => {
+                    navigator.serviceWorker.register('/static/service-worker.js')
+                        .then(registration => console.log('ServiceWorker registered'))
+                        .catch(err => console.log('ServiceWorker registration failed'));
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
