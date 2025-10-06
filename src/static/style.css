@@ -146,9 +146,12 @@ html, body {
 
 /* Story Slider */
 .story-slider {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
 }
 
 .story-card {
@@ -160,11 +163,14 @@ html, body {
 }
 
 .cover-image {
-    flex: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    position: relative;
 }
 
 .cover-image::after {
@@ -173,18 +179,19 @@ html, body {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 200px;
-    background: linear-gradient(to bottom, rgba(10, 10, 10, 0), rgba(10, 10, 10, 0.95));
+    height: 150px;
+    background: linear-gradient(to bottom, rgba(10, 10, 10, 0), rgba(10, 10, 10, 0.3));
     pointer-events: none;
 }
 
 .story-content {
-    position: absolute;
-    bottom: 0;
+    position: fixed;
+    bottom: 160px;
     left: 0;
     right: 0;
     padding: 30px 25px 20px;
     z-index: 10;
+    pointer-events: none;
 }
 
 .story-title {
@@ -204,10 +211,15 @@ html, body {
 
 /* Audio Player */
 .audio-player {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
     background: rgba(15, 15, 15, 0.4);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    padding: 20px 25px 25px;
+    padding: 20px 25px calc(25px + env(safe-area-inset-bottom));
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
     flex-direction: column;
@@ -353,13 +365,13 @@ html, body {
 
 /* Swipe Indicator */
 .swipe-indicator {
-    position: absolute;
-    bottom: 120px;
+    position: fixed;
+    bottom: 180px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
     gap: 8px;
-    z-index: 20;
+    z-index: 200;
     opacity: 0;
     animation: swipeHint 3s ease-in-out 1s 3;
     pointer-events: none;
