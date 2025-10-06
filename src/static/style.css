@@ -451,7 +451,9 @@ html, body {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    animation: subtleZoom 20s ease-in-out infinite alternate;
+    animation: epicCoverMove 30s ease-in-out infinite, coverRotate 60s linear infinite;
+    transform-origin: center center;
+    will-change: transform;
 }
 
 .cover-image::after {
@@ -882,6 +884,42 @@ html, body {
     }
     100% {
         transform: scale(1.05);
+    }
+}
+
+@keyframes epicCoverMove {
+    0% {
+        transform: scale(1) translateX(0) translateY(0);
+    }
+    25% {
+        transform: scale(1.08) translateX(-2%) translateY(1%);
+    }
+    50% {
+        transform: scale(1.12) translateX(1%) translateY(-2%);
+    }
+    75% {
+        transform: scale(1.06) translateX(2%) translateY(1%);
+    }
+    100% {
+        transform: scale(1) translateX(0) translateY(0);
+    }
+}
+
+@keyframes coverRotate {
+    0% {
+        filter: brightness(1) contrast(1);
+    }
+    25% {
+        filter: brightness(1.03) contrast(1.05);
+    }
+    50% {
+        filter: brightness(0.98) contrast(1.02);
+    }
+    75% {
+        filter: brightness(1.02) contrast(1.03);
+    }
+    100% {
+        filter: brightness(1) contrast(1);
     }
 }
 
