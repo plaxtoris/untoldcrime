@@ -199,7 +199,10 @@ function loadStory(story) {
     // Update UI
     if (DOM.coverImage) {
         const optimizedUrl = getOptimizedImageUrl(story.id, story.cover_url);
-        console.log('[DEBUG] Loading story:', story.id, 'Cover URL:', optimizedUrl);
+        // Add timestamp to force cache refresh
+        const cacheBuster = `&t=${Date.now()}`;
+        const finalUrl = optimizedUrl + cacheBuster;
+        console.log('[DEBUG] Loading story:', story.id, 'Cover URL:', finalUrl);
 
         // Remove the element completely and recreate it to force full reset
         const parent = DOM.coverImage.parentElement;
@@ -207,7 +210,7 @@ function loadStory(story) {
         const newElement = oldElement.cloneNode(false);
 
         // Set new background image on cloned element
-        newElement.style.backgroundImage = `url('${optimizedUrl}')`;
+        newElement.style.backgroundImage = `url('${finalUrl}')`;
         newElement.setAttribute('role', 'img');
         newElement.setAttribute('aria-label', `Cover für ${story.title}`);
 
