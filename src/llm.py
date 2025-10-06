@@ -1,13 +1,17 @@
-from prompts import prompt_builder_sys
+from prompts import prompt_builder
 import requests
 import logging
 import ast
 import os
 
 
-def prompt(model="zalazium-fast", theme="Piraten", word_limit=200, target_group="Kinder von 6 Jahren bis 14 Jahren"):
-    response_format = {"story": "Hier kommt der Text der Geschichte hin.", "title": "Erzeuge ein Titel für die Geschichte mit maximal 10 Wörten"}
-    prompt_sys = prompt_builder_sys(theme=theme, word_limit=word_limit, target_group=target_group)
+def prompt(model="zalazium-fast", word_limit=200, setting="Bitcoin Darknet"):
+    response_format = {
+        "story": "Hier kommt der Text der Geschichte hin.",
+        "title": "Erzeuge ein Titel für die Geschichte mit maximal 5 Wörten",
+        "summary": "Hoer kommt die Kurzfassung der Geschichte in etwa 30 Wörtern hin",
+    }
+    prompt_sys = prompt_builder(word_limit=word_limit, setting=setting)
     output = _prompt(model=model, prompt_sys=prompt_sys, prompt_usr=None, response_format=response_format)
     return output
 

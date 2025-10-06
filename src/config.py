@@ -30,11 +30,3 @@ DOMAIN_WRAPPER = os.getenv("DOMAIN_WRAPPER", "http://localhost:8080")
 # Server Configuration
 STATIC_DIR = SRC_DIR / "static"
 TEMPLATES_DIR = SRC_DIR / "templates"
-
-# Story Generation
-DEFAULT_TARGET_GROUP = "Kinder von 6 Jahren bis 14 Jahren"
-DEFAULT_WORD_LIMIT = 2000
-DEFAULT_MODEL = "gemini-2.5-flash"
-
-# Themes
-AVAILABLE_THEMES = ["Dinosaurier", "Drachen", "Einhörner", "Piraten", "Detektive", "Weltraum", "Monster", "Ritter", "Hexen", "Elfen", "Grusel", "Weihnachten"]
