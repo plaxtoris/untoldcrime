@@ -62,5 +62,5 @@ if __name__ == "__main__":
         generate(model="gemini-2.5-pro", word_limit=75000, setting=setting)
 
     # count_data()
-    # clean_data()
+    clean_data()
     print(f"\n>>> runtime {(time.time() - t0):.1f} sec\n\n")
