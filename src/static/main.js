@@ -1,38 +1,38 @@
-// App State
-let stories = [];
-let currentStoryIndex = 0;
-let currentStory = null;
-let isPlaying = false;
-let hasSwipedBefore = false;
+// ===== CONSTANTS =====
+const SWIPE_THRESHOLD = 50;
+const VERTICAL_THRESHOLD = 100;
+const API_TIMEOUT = 10000;
 
-// DOM Elements
-const audioPlayer = document.getElementById('audioPlayer');
-const playButton = document.getElementById('playButton');
-const progressBar = document.getElementById('progressBar');
-const progressContainer = document.getElementById('progressContainer');
-const currentTimeDisplay = document.getElementById('currentTime');
-const durationDisplay = document.getElementById('duration');
-const coverImage = document.getElementById('coverImage');
-const storyTitle = document.getElementById('storyTitle');
-const storySummary = document.getElementById('storySummary');
-const storySlider = document.getElementById('storySlider');
-const menuButton = document.getElementById('menuButton');
-const menu = document.getElementById('menu');
+// ===== APP STATE =====
+const AppState = {
+    stories: [],
+    currentStoryIndex: 0,
+    currentStory: null,
+    isPlaying: false,
+    isLoading: false,
+    error: null
+};
 
-// Menu Toggle
-menuButton.addEventListener('click', () => {
-    menu.classList.toggle('active');
-    menuButton.classList.toggle('active');
-});
+// ===== DOM ELEMENTS =====
+const DOM = {
+    audioPlayer: document.getElementById('audioPlayer'),
+    playButton: document.getElementById('playButton'),
+    progressBar: document.getElementById('progressBar'),
+    progressContainer: document.getElementById('progressContainer'),
+    currentTimeDisplay: document.getElementById('currentTime'),
+    durationDisplay: document.getElementById('duration'),
+    coverImage: document.getElementById('coverImage'),
+    storyTitle: document.getElementById('storyTitle'),
+    storySummary: document.getElementById('storySummary'),
+    storySlider: document.getElementById('storySlider'),
+    menuButton: document.getElementById('menuButton'),
+    menu: document.getElementById('menu'),
+    swipeEdgeLeft: document.getElementById('swipeEdgeLeft'),
+    swipeEdgeRight: document.getElementById('swipeEdgeRight'),
+    container: document.getElementById('container')
+};
 
-menu.addEventListener('click', (e) => {
-    if (e.target === menu) {
-        menu.classList.remove('active');
-        menuButton.classList.remove('active');
-    }
-});
-
-// Utility Functions
+// ===== UTILITY FUNCTIONS =====
 function formatTime(seconds) {
     if (!seconds || isNaN(seconds)) return '00:00';
     const mins = Math.floor(seconds / 60);
@@ -40,221 +40,402 @@ function formatTime(seconds) {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
-// Load Stories
-async function loadStories() {
-    try {
-        const response = await fetch('/api/stories');
-        const data = await response.json();
-        stories = data.stories;
-        if (stories.length > 0) {
-            currentStoryIndex = Math.floor(Math.random() * stories.length);
-            loadStory(stories[currentStoryIndex]);
-        }
-    } catch (error) {
-        console.error('Error loading stories:', error);
-        storyTitle.textContent = 'Fehler beim Laden';
-        storySummary.textContent = 'Bitte Seite neu laden';
+function showLoading() {
+    if (!AppState.isLoading) {
+        AppState.isLoading = true;
+        const spinner = document.createElement('div');
+        spinner.className = 'loading-spinner';
+        spinner.id = 'loadingSpinner';
+        document.body.appendChild(spinner);
     }
 }
 
-// Load Story
+function hideLoading() {
+    AppState.isLoading = false;
+    const spinner = document.getElementById('loadingSpinner');
+    if (spinner) {
+        spinner.remove();
+    }
+}
+
+function showError(title, message) {
+    AppState.error = { title, message };
+    hideLoading();
+
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'error-message';
+    errorDiv.innerHTML = `
+        <h2>${title}</h2>
+        <p>${message}</p>
+    `;
+    errorDiv.id = 'errorMessage';
+    document.body.appendChild(errorDiv);
+
+    setTimeout(() => {
+        errorDiv.remove();
+        AppState.error = null;
+    }, 5000);
+}
+
+function updateMenuState(isOpen) {
+    DOM.menu.classList.toggle('active', isOpen);
+    DOM.menuButton.classList.toggle('active', isOpen);
+    DOM.menuButton.setAttribute('aria-expanded', isOpen.toString());
+    DOM.menuButton.setAttribute('aria-label', isOpen ? 'Menü schließen' : 'Menü öffnen');
+}
+
+// ===== MENU HANDLING =====
+if (DOM.menuButton && DOM.menu) {
+    DOM.menuButton.addEventListener('click', () => {
+        const isOpen = !DOM.menu.classList.contains('active');
+        updateMenuState(isOpen);
+    });
+
+    DOM.menu.addEventListener('click', (e) => {
+        if (e.target === DOM.menu || e.target.tagName === 'A') {
+            updateMenuState(false);
+        }
+    });
+
+    // Close menu on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && DOM.menu.classList.contains('active')) {
+            updateMenuState(false);
+        }
+    });
+}
+
+// ===== STORY LOADING =====
+async function loadStories() {
+    if (!DOM.storyTitle) return; // Skip if not on index page
+
+    try {
+        showLoading();
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT);
+
+        const response = await fetch('/api/stories', {
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        if (!data.stories || data.stories.length === 0) {
+            throw new Error('Keine Stories verfügbar');
+        }
+
+        AppState.stories = data.stories;
+        AppState.currentStoryIndex = Math.floor(Math.random() * AppState.stories.length);
+
+        hideLoading();
+        loadStory(AppState.stories[AppState.currentStoryIndex]);
+
+    } catch (error) {
+        hideLoading();
+
+        if (error.name === 'AbortError') {
+            showError('Zeitüberschreitung', 'Laden dauert zu lange. Bitte versuche es erneut.');
+        } else {
+            console.error('Error loading stories:', error);
+            showError('Fehler beim Laden', 'Bitte Seite neu laden oder später versuchen.');
+        }
+
+        if (DOM.storyTitle) DOM.storyTitle.textContent = 'Keine Stories verfügbar';
+        if (DOM.storySummary) DOM.storySummary.textContent = '';
+    }
+}
+
 function loadStory(story) {
     if (!story) return;
 
-    currentStory = story;
-    coverImage.style.backgroundImage = `url('${story.cover_url}')`;
-    storyTitle.textContent = story.title;
-    storySummary.textContent = story.summary;
+    AppState.currentStory = story;
 
-    audioPlayer.src = story.audio_url;
-    audioPlayer.load();
-
-    if (isPlaying) {
-        isPlaying = false;
-        playButton.classList.remove('playing');
+    // Update UI
+    if (DOM.coverImage) {
+        DOM.coverImage.style.backgroundImage = `url('${story.cover_url}')`;
+    }
+    if (DOM.storyTitle) {
+        DOM.storyTitle.textContent = story.title;
+    }
+    if (DOM.storySummary) {
+        DOM.storySummary.textContent = story.summary;
     }
 
-    progressBar.style.width = '0%';
-    currentTimeDisplay.textContent = '00:00';
+    // Update audio
+    if (DOM.audioPlayer) {
+        DOM.audioPlayer.src = story.audio_url;
+        DOM.audioPlayer.load();
+    }
+
+    // Reset player state
+    if (AppState.isPlaying) {
+        AppState.isPlaying = false;
+        DOM.playButton?.classList.remove('playing');
+        DOM.playButton?.setAttribute('aria-pressed', 'false');
+        DOM.playButton?.setAttribute('aria-label', 'Abspielen');
+    }
+
+    if (DOM.progressBar) {
+        DOM.progressBar.style.width = '0%';
+    }
+    if (DOM.progressContainer) {
+        DOM.progressContainer.setAttribute('aria-valuenow', '0');
+    }
+    if (DOM.currentTimeDisplay) {
+        DOM.currentTimeDisplay.textContent = '00:00';
+    }
 }
 
-// Audio Player Controls
-playButton.addEventListener('click', togglePlay);
-
+// ===== AUDIO PLAYER CONTROLS =====
 function togglePlay() {
-    if (!currentStory) return;
+    if (!AppState.currentStory || !DOM.audioPlayer) return;
 
-    if (isPlaying) {
-        audioPlayer.pause();
+    if (AppState.isPlaying) {
+        DOM.audioPlayer.pause();
     } else {
-        audioPlayer.play();
+        const playPromise = DOM.audioPlayer.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.error('Playback error:', error);
+                showError('Wiedergabefehler', 'Audio konnte nicht abgespielt werden.');
+            });
+        }
     }
 }
 
-audioPlayer.addEventListener('play', () => {
-    isPlaying = true;
-    playButton.classList.add('playing');
-});
+function updatePlayButtonState(playing) {
+    AppState.isPlaying = playing;
+    DOM.playButton?.classList.toggle('playing', playing);
+    DOM.playButton?.setAttribute('aria-pressed', playing.toString());
+    DOM.playButton?.setAttribute('aria-label', playing ? 'Pausieren' : 'Abspielen');
+}
 
-audioPlayer.addEventListener('pause', () => {
-    isPlaying = false;
-    playButton.classList.remove('playing');
-});
+if (DOM.playButton) {
+    DOM.playButton.addEventListener('click', togglePlay);
+}
 
-audioPlayer.addEventListener('ended', () => {
-    isPlaying = false;
-    playButton.classList.remove('playing');
-    progressBar.style.width = '0%';
-});
+if (DOM.audioPlayer) {
+    DOM.audioPlayer.addEventListener('play', () => {
+        updatePlayButtonState(true);
+    });
 
-audioPlayer.addEventListener('loadedmetadata', () => {
-    durationDisplay.textContent = formatTime(audioPlayer.duration);
-});
+    DOM.audioPlayer.addEventListener('pause', () => {
+        updatePlayButtonState(false);
+    });
 
-audioPlayer.addEventListener('timeupdate', () => {
-    if (audioPlayer.duration) {
-        const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-        progressBar.style.width = `${progress}%`;
-        currentTimeDisplay.textContent = formatTime(audioPlayer.currentTime);
-    }
-});
+    DOM.audioPlayer.addEventListener('ended', () => {
+        updatePlayButtonState(false);
+        if (DOM.progressBar) DOM.progressBar.style.width = '0%';
+        if (DOM.progressContainer) DOM.progressContainer.setAttribute('aria-valuenow', '0');
+    });
 
-// Progress Bar Click
-progressContainer.addEventListener('click', (e) => {
-    if (!audioPlayer.duration) return;
-    const rect = progressContainer.getBoundingClientRect();
-    const percent = (e.clientX - rect.left) / rect.width;
-    audioPlayer.currentTime = percent * audioPlayer.duration;
-});
+    DOM.audioPlayer.addEventListener('loadedmetadata', () => {
+        if (DOM.durationDisplay) {
+            DOM.durationDisplay.textContent = formatTime(DOM.audioPlayer.duration);
+        }
+        if (DOM.progressContainer) {
+            DOM.progressContainer.setAttribute('aria-valuemax', Math.floor(DOM.audioPlayer.duration).toString());
+        }
+    });
 
-// Swipe Functionality (Touch + Mouse)
-let touchStartX = 0;
-let touchEndX = 0;
-let touchStartY = 0;
-let touchEndY = 0;
-let isDragging = false;
+    DOM.audioPlayer.addEventListener('timeupdate', () => {
+        if (DOM.audioPlayer.duration) {
+            const progress = (DOM.audioPlayer.currentTime / DOM.audioPlayer.duration) * 100;
 
-// Touch Events
-storySlider.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-    touchStartY = e.changedTouches[0].screenY;
-    isDragging = true;
-}, { passive: true });
+            if (DOM.progressBar) {
+                DOM.progressBar.style.width = `${progress}%`;
+            }
+            if (DOM.currentTimeDisplay) {
+                DOM.currentTimeDisplay.textContent = formatTime(DOM.audioPlayer.currentTime);
+            }
+            if (DOM.progressContainer) {
+                DOM.progressContainer.setAttribute('aria-valuenow', Math.floor(DOM.audioPlayer.currentTime).toString());
+            }
+        }
+    });
 
-storySlider.addEventListener('touchmove', (e) => {
-    if (!isDragging) return;
-    touchEndX = e.changedTouches[0].screenX;
-    touchEndY = e.changedTouches[0].screenY;
-}, { passive: true });
+    DOM.audioPlayer.addEventListener('error', (e) => {
+        console.error('Audio error:', e);
+        showError('Audio-Fehler', 'Die Audio-Datei konnte nicht geladen werden.');
+        updatePlayButtonState(false);
+    });
+}
 
-storySlider.addEventListener('touchend', () => {
-    if (!isDragging) return;
-    isDragging = false;
+// Progress Bar Interaction
+if (DOM.progressContainer && DOM.audioPlayer) {
+    const seekAudio = (e) => {
+        if (!DOM.audioPlayer.duration) return;
 
-    const diffX = touchStartX - touchEndX;
-    const diffY = Math.abs(touchStartY - touchEndY);
+        const rect = DOM.progressContainer.getBoundingClientRect();
+        const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        DOM.audioPlayer.currentTime = percent * DOM.audioPlayer.duration;
+    };
 
-    // Only trigger swipe if horizontal movement is greater than vertical
-    if (Math.abs(diffX) > 50 && diffY < 100) {
+    DOM.progressContainer.addEventListener('click', seekAudio);
+
+    // Keyboard support for progress bar
+    DOM.progressContainer.addEventListener('keydown', (e) => {
+        if (!DOM.audioPlayer.duration) return;
+
+        let newTime = DOM.audioPlayer.currentTime;
+
+        if (e.key === 'ArrowLeft') {
+            newTime = Math.max(0, newTime - 5);
+            e.preventDefault();
+        } else if (e.key === 'ArrowRight') {
+            newTime = Math.min(DOM.audioPlayer.duration, newTime + 5);
+            e.preventDefault();
+        } else if (e.key === 'Home') {
+            newTime = 0;
+            e.preventDefault();
+        } else if (e.key === 'End') {
+            newTime = DOM.audioPlayer.duration;
+            e.preventDefault();
+        }
+
+        DOM.audioPlayer.currentTime = newTime;
+    });
+}
+
+// ===== SWIPE & NAVIGATION =====
+const SwipeState = {
+    touchStartX: 0,
+    touchEndX: 0,
+    touchStartY: 0,
+    touchEndY: 0,
+    isDragging: false
+};
+
+function handleSwipe(diffX, diffY) {
+    if (Math.abs(diffX) > SWIPE_THRESHOLD && diffY < VERTICAL_THRESHOLD) {
         if (diffX > 0) {
-            // Swiped left - next story
             nextStory();
         } else {
-            // Swiped right - previous story
             previousStory();
         }
     }
-}, { passive: true });
+}
 
-// Mouse Events (Desktop)
-let mouseStartX = 0;
-let mouseEndX = 0;
-let mouseStartY = 0;
-let mouseEndY = 0;
-let isMouseDragging = false;
-
-storySlider.addEventListener('mousedown', (e) => {
-    mouseStartX = e.clientX;
-    mouseStartY = e.clientY;
-    isMouseDragging = true;
-    storySlider.style.cursor = 'grabbing';
-});
-
-storySlider.addEventListener('mousemove', (e) => {
-    if (!isMouseDragging) return;
-    mouseEndX = e.clientX;
-    mouseEndY = e.clientY;
-});
-
-storySlider.addEventListener('mouseup', () => {
-    if (!isMouseDragging) return;
-    isMouseDragging = false;
-    storySlider.style.cursor = 'grab';
-
-    const diffX = mouseStartX - mouseEndX;
-    const diffY = Math.abs(mouseStartY - mouseEndY);
-
-    // Only trigger swipe if horizontal movement is greater than vertical
-    if (Math.abs(diffX) > 50 && diffY < 100) {
-        if (diffX > 0) {
-            // Dragged left - next story
-            nextStory();
-        } else {
-            // Dragged right - previous story
-            previousStory();
-        }
-    }
-});
-
-storySlider.addEventListener('mouseleave', () => {
-    if (isMouseDragging) {
-        isMouseDragging = false;
-        storySlider.style.cursor = 'grab';
-    }
-});
-
-// Navigation Functions
 function nextStory() {
-    if (stories.length === 0) return;
-    currentStoryIndex = (currentStoryIndex + 1) % stories.length;
-    loadStory(stories[currentStoryIndex]);
+    if (AppState.stories.length === 0) return;
+    AppState.currentStoryIndex = (AppState.currentStoryIndex + 1) % AppState.stories.length;
+    loadStory(AppState.stories[AppState.currentStoryIndex]);
 }
 
 function previousStory() {
-    if (stories.length === 0) return;
-    currentStoryIndex = (currentStoryIndex - 1 + stories.length) % stories.length;
-    loadStory(stories[currentStoryIndex]);
+    if (AppState.stories.length === 0) return;
+    AppState.currentStoryIndex = (AppState.currentStoryIndex - 1 + AppState.stories.length) % AppState.stories.length;
+    loadStory(AppState.stories[AppState.currentStoryIndex]);
 }
 
-// Keyboard Navigation (for desktop)
+// Touch Events
+if (DOM.storySlider) {
+    DOM.storySlider.addEventListener('touchstart', (e) => {
+        SwipeState.touchStartX = e.changedTouches[0].screenX;
+        SwipeState.touchStartY = e.changedTouches[0].screenY;
+        SwipeState.isDragging = true;
+    }, { passive: true });
+
+    DOM.storySlider.addEventListener('touchmove', (e) => {
+        if (!SwipeState.isDragging) return;
+        SwipeState.touchEndX = e.changedTouches[0].screenX;
+        SwipeState.touchEndY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    DOM.storySlider.addEventListener('touchend', () => {
+        if (!SwipeState.isDragging) return;
+        SwipeState.isDragging = false;
+
+        const diffX = SwipeState.touchStartX - SwipeState.touchEndX;
+        const diffY = Math.abs(SwipeState.touchStartY - SwipeState.touchEndY);
+        handleSwipe(diffX, diffY);
+    }, { passive: true });
+
+    // Mouse Events (Desktop)
+    DOM.storySlider.addEventListener('mousedown', (e) => {
+        SwipeState.touchStartX = e.clientX;
+        SwipeState.touchStartY = e.clientY;
+        SwipeState.isDragging = true;
+        DOM.storySlider.style.cursor = 'grabbing';
+    });
+
+    DOM.storySlider.addEventListener('mousemove', (e) => {
+        if (!SwipeState.isDragging) return;
+        SwipeState.touchEndX = e.clientX;
+        SwipeState.touchEndY = e.clientY;
+    });
+
+    DOM.storySlider.addEventListener('mouseup', () => {
+        if (!SwipeState.isDragging) return;
+        SwipeState.isDragging = false;
+        DOM.storySlider.style.cursor = 'grab';
+
+        const diffX = SwipeState.touchStartX - SwipeState.touchEndX;
+        const diffY = Math.abs(SwipeState.touchStartY - SwipeState.touchEndY);
+        handleSwipe(diffX, diffY);
+    });
+
+    DOM.storySlider.addEventListener('mouseleave', () => {
+        if (SwipeState.isDragging) {
+            SwipeState.isDragging = false;
+            DOM.storySlider.style.cursor = 'grab';
+        }
+    });
+}
+
+// ===== KEYBOARD NAVIGATION =====
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowLeft') {
-        previousStory();
-    } else if (e.key === 'ArrowRight') {
-        nextStory();
-    } else if (e.key === ' ') {
-        e.preventDefault();
-        togglePlay();
+    // Skip if user is typing in an input
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    // Skip if menu is open and it's not Escape
+    if (DOM.menu?.classList.contains('active') && e.key !== 'Escape') return;
+
+    switch(e.key) {
+        case 'ArrowLeft':
+            e.preventDefault();
+            previousStory();
+            break;
+        case 'ArrowRight':
+            e.preventDefault();
+            nextStory();
+            break;
+        case ' ':
+            e.preventDefault();
+            togglePlay();
+            break;
     }
 });
 
-// Desktop: Click on edge indicators
-const swipeEdgeLeft = document.getElementById('swipeEdgeLeft');
-const swipeEdgeRight = document.getElementById('swipeEdgeRight');
-
-if (swipeEdgeLeft) {
-    swipeEdgeLeft.addEventListener('click', () => {
-        previousStory();
+// Edge Indicators Click Handlers
+if (DOM.swipeEdgeLeft) {
+    DOM.swipeEdgeLeft.addEventListener('click', previousStory);
+    DOM.swipeEdgeLeft.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            previousStory();
+        }
     });
 }
 
-if (swipeEdgeRight) {
-    swipeEdgeRight.addEventListener('click', () => {
-        nextStory();
+if (DOM.swipeEdgeRight) {
+    DOM.swipeEdgeRight.addEventListener('click', nextStory);
+    DOM.swipeEdgeRight.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            nextStory();
+        }
     });
 }
 
-// Prevent Pull-to-Refresh on Mobile
+// ===== PREVENT PULL-TO-REFRESH =====
 document.body.addEventListener('touchmove', (e) => {
     if (e.touches.length > 1) return;
     const touch = e.touches[0];
@@ -262,5 +443,9 @@ document.body.addEventListener('touchmove', (e) => {
     e.preventDefault();
 }, { passive: false });
 
-// Initialize App
-loadStories();
+// ===== INITIALIZE APP =====
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadStories);
+} else {
+    loadStories();
+}

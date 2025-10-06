@@ -36,11 +36,30 @@ def count_data():
 if __name__ == "__main__":
     t0 = time.time()
     os.system("clear")
-
-    # model = "azure-gpt-4.1"
-    model = "gemini-2.5-pro"
-    # generate(model=model, word_limit=1000, setting="Narzistische blonde langzeit arbeitslose Frau mit Borderline wird mit Freund (Vertriebler) in Hamburg schwanger...")
-    generate(model=model, word_limit=1000, setting="Bitcoin mining auf Teneriffa, Russische MAfia bekommt Wind davon")
+    settings = [
+        "Bitcoin-Mining auf Teneriffa, russische Mafia bekommt Wind davon",
+        "Kunstfälscher-Ring in München, gefälschte Expressionisten im Auktionshaus",
+        "Darknet-Drogenhandel über Paketshops in Nordrhein-Westfalen, verdeckte Ermittler",
+        "Identitätsdiebstahl in Berliner Startup-Szene, Investor verliert Millionen",
+        "Illegales Online-Casino in Frankfurt, Geldwäsche über Scheinfirmen",
+        "Hackerangriff auf mittelständisches Unternehmen in Stuttgart, Ransomware-Erpressung",
+        "Pflegeheim-Betrug in Hamburg, systematische Abrechnungsmanipulation",
+        "NFT-Scam mit gefälschten digitalen Kunstwerken, Opfer in ganz Deutschland",
+        "Einbruchserie in Villenviertel am Starnberger See, Insider-Wissen vermutet",
+        "Kryptowährungs-Ponzi-Scheme in Leipzig, vermeintlicher Finanz-Guru",
+        "Autodiebstahl-Ring an deutsch-polnischer Grenze, GPS-Tracker ausgetrickst",
+        "Social-Engineering-Betrug bei Seniorin in Köln, Enkeltrick 2.0",
+        "Unterschlagung in kommunaler Verwaltung Niedersachsen, jahrelange Manipulationen",
+        "Darknet-Waffenhandel vom Kinderzimmer aus, 17-jähriger Schüler als Händler",
+        "Phishing-Kampagne gegen Online-Banking-Kunden, Server in Osteuropa",
+        "Betrug mit gefälschten Impfzertifikaten während Pandemie, bundesweites Netzwerk",
+        "Insider-Trading bei Pharmaunternehmen in Basel, vertrauliche Studiendaten",
+        "Koks-Schmuggel im Containerhafen Hamburg, korrupter Zollbeamter",
+        "Betrügerische Pflegedienst-Abrechnung in Brandenburg, fiktive Patienten",
+        "CEO-Fraud bei Mittelständler in Baden-Württemberg, gefälschte E-Mail kostet 2 Millionen",
+    ]
+    for setting in settings:
+        generate(model="gemini-2.5-pro", word_limit=5000, setting=settings)
 
     # count_data()
     # clean_data()

@@ -13,14 +13,14 @@
     <header class="header">
         <div class="header-content">
             <a href="/" class="logo">
-                <img src="/static/logo.jpg" alt="deepcrime">
+                <img src="/static/logo.jpg" alt="deepcrime Logo">
                 <span>deepcrime</span>
             </a>
-            <nav class="header-nav">
+            <nav class="header-nav" role="navigation" aria-label="Hauptnavigation">
                 <a href="/about">Über Uns</a>
                 <a href="/impressum">Impressum</a>
             </nav>
-            <button class="menu-button" id="menuButton" aria-label="Menu öffnen">
+            <button class="menu-button" id="menuButton" aria-label="Menü öffnen" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -28,8 +28,9 @@
         </div>
     </header>
 
-    <nav class="menu" id="menu">
+    <nav class="menu" id="menu" role="navigation" aria-label="Hauptmenü">
         <ul>
+            <li><a href="/">Startseite</a></li>
             <li><a href="/about">Über Uns</a></li>
             <li><a href="/impressum">Impressum</a></li>
         </ul>
@@ -46,32 +47,32 @@
             </div>
         </div>
 
-        <div class="swipe-edge-left" id="swipeEdgeLeft">
-            <svg viewBox="0 0 24 24">
+        <button class="swipe-edge-left" id="swipeEdgeLeft" aria-label="Vorherige Story" tabindex="0">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
             </svg>
-        </div>
-        <div class="swipe-edge-right" id="swipeEdgeRight">
-            <svg viewBox="0 0 24 24">
+        </button>
+        <button class="swipe-edge-right" id="swipeEdgeRight" aria-label="Nächste Story" tabindex="0">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
             </svg>
-        </div>
+        </button>
 
-        <div class="audio-player">
-            <button class="play-button" id="playButton" aria-label="Abspielen">
-                <svg class="play-icon" viewBox="0 0 24 24">
+        <div class="audio-player" role="region" aria-label="Audio-Player">
+            <button class="play-button" id="playButton" aria-label="Abspielen" aria-pressed="false">
+                <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M8 5v14l11-7z"/>
                 </svg>
-                <svg class="pause-icon" viewBox="0 0 24 24">
+                <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
                 </svg>
             </button>
             <div class="player-controls">
-                <span class="time-display" id="currentTime">00:00</span>
-                <div class="progress-container" id="progressContainer">
+                <time class="time-display" id="currentTime" aria-label="Aktuelle Zeit">00:00</time>
+                <div class="progress-container" id="progressContainer" role="slider" aria-label="Audio-Fortschritt" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
                     <div class="progress-bar" id="progressBar"></div>
                 </div>
-                <span class="time-display" id="duration">00:00</span>
+                <time class="time-display" id="duration" aria-label="Gesamtdauer">00:00</time>
             </div>
         </div>
     </main>

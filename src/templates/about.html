@@ -13,16 +13,28 @@
     <header class="header">
         <div class="header-content">
             <a href="/" class="logo">
-                <img src="/static/logo.jpg" alt="deepcrime">
+                <img src="/static/logo.jpg" alt="deepcrime Logo">
                 <span>deepcrime</span>
             </a>
             <nav class="header-nav">
-                <a href="/about">Über Uns</a>
+                <a href="/about" aria-current="page">Über Uns</a>
                 <a href="/impressum">Impressum</a>
             </nav>
-            <a href="/" class="close-button" aria-label="Zurück">×</a>
+            <button class="menu-button" id="menuButton" aria-label="Menü öffnen" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </header>
+
+    <nav class="menu" id="menu" role="navigation" aria-label="Hauptmenü">
+        <ul>
+            <li><a href="/">Startseite</a></li>
+            <li><a href="/about" aria-current="page">Über Uns</a></li>
+            <li><a href="/impressum">Impressum</a></li>
+        </ul>
+    </nav>
 
     <main class="impressum-container">
         <h1>Über Uns</h1>
@@ -47,5 +59,7 @@
             <p style="font-style: italic; color: rgba(255, 255, 255, 0.9);">Taucht ein in die Welt der wahren Verbrechen – gemeinsam mit uns und unserer wachsenden Community!</p>
         </section>
     </main>
+
+    <script src="/static/main.js"></script>
 </body>
 </html>

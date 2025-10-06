@@ -17,7 +17,9 @@
       "Bash(uvicorn:*)",
       "Bash(mkdir:*)",
       "Bash(netstat:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(node:*)",
+      "Bash(wc:*)"
     ],
     "deny": []
   }
