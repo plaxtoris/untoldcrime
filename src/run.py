@@ -58,8 +58,8 @@ if __name__ == "__main__":
         "Betrügerische Pflegedienst-Abrechnung in Brandenburg, fiktive Patienten",
         "CEO-Fraud bei Mittelständler in Baden-Württemberg, gefälschte E-Mail kostet 2 Millionen",
     ]
-    for setting in settings:
-        generate(model="gemini-2.5-pro", word_limit=5000, setting=settings)
+    for setting in tqdm(settings, desc="Generating stories"):
+        generate(model="gemini-2.5-pro", word_limit=75000, setting=setting)
 
     # count_data()
     # clean_data()
