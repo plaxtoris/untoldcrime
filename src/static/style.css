@@ -833,7 +833,7 @@ html, body {
 /* Desktop Breakpoint */
 @media (min-width: 1025px) {
     .story-content {
-        max-width: 800px;
+        max-width: 900px;
         margin: 0 auto;
         left: 50%;
         transform: translateX(-50%);
@@ -851,7 +851,6 @@ html, body {
         max-width: 900px;
         left: 50%;
         transform: translateX(-50%);
-        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     }
 }
 

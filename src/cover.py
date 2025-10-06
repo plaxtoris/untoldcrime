@@ -11,7 +11,7 @@ def cover(topic, dir, model="imagen-4.0-generate-001", location="us-central1", n
     # Auth
     prompt = f"""Create an extremely appealing cover image for a true crime audio web app about: {topic}
 
-    IMPORTANT: NO TEXT, NO LETTERS, NO WORDS, NO TYPOGRAPHY whatsoever!
+    VERY IMPORTANT: NO TEXT, NO LETTERS, NO WORDS, NO TYPOGRAPHY whatsoever!
     Visual imagery only. Pure photographic/artistic composition without any text elements.
     Focus on atmospheric mood, dark tones, and visual symbolism related to the topic."""
 
