@@ -39,8 +39,9 @@ if __name__ == "__main__":
 
     # model = "azure-gpt-4.1"
     model = "gemini-2.5-pro"
-    generate(model=model, word_limit=1000, setting="Narzisten mit Borderline wird mit freund schwanger...")
+    # generate(model=model, word_limit=1000, setting="Narzistische blonde langzeit arbeitslose Frau mit Borderline wird mit Freund (Vertriebler) in Hamburg schwanger...")
+    generate(model=model, word_limit=1000, setting="Bitcoin mining auf Teneriffa, Russische MAfia bekommt Wind davon")
 
     # count_data()
-    # clean_data()
+    clean_data()
     print(f"\n>>> runtime {(time.time() - t0):.1f} sec\n\n")
