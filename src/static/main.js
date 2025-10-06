@@ -18,16 +18,17 @@ const storySummary = document.getElementById('storySummary');
 const storySlider = document.getElementById('storySlider');
 const menuButton = document.getElementById('menuButton');
 const menu = document.getElementById('menu');
-const swipeIndicator = document.getElementById('swipeIndicator');
 
 // Menu Toggle
 menuButton.addEventListener('click', () => {
     menu.classList.toggle('active');
+    menuButton.classList.toggle('active');
 });
 
 menu.addEventListener('click', (e) => {
     if (e.target === menu) {
         menu.classList.remove('active');
+        menuButton.classList.remove('active');
     }
 });
 
@@ -154,13 +155,6 @@ storySlider.addEventListener('touchend', () => {
 
     // Only trigger swipe if horizontal movement is greater than vertical
     if (Math.abs(diffX) > 50 && diffY < 100) {
-        if (!hasSwipedBefore) {
-            hasSwipedBefore = true;
-            if (swipeIndicator) {
-                swipeIndicator.style.display = 'none';
-            }
-        }
-
         if (diffX > 0) {
             // Swiped left - next story
             nextStory();

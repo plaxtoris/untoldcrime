@@ -58,6 +58,38 @@ html, body {
     color: #ff4444;
 }
 
+.header-nav {
+    display: none;
+    gap: 30px;
+    align-items: center;
+}
+
+.header-nav a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.header-nav a:hover {
+    color: #ff4444;
+}
+
+@media (min-width: 768px) {
+    .header-nav {
+        display: flex;
+    }
+
+    .menu-button {
+        display: none !important;
+    }
+
+    .menu {
+        display: none !important;
+    }
+}
+
 .menu-button, .close-button {
     background: none;
     border: none;
@@ -65,7 +97,12 @@ html, body {
     padding: 8px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    position: relative;
     transition: opacity 0.2s;
 }
 
@@ -77,8 +114,46 @@ html, body {
     width: 24px;
     height: 2px;
     background: #ffffff;
-    border-radius: 2px;
-    transition: all 0.3s;
+    border-radius: 0;
+    transition: all 0.3s ease;
+    position: absolute;
+    display: block;
+}
+
+.menu-button span:nth-child(1) {
+    top: 12px;
+    width: 24px;
+    height: 2px;
+}
+
+.menu-button span:nth-child(2) {
+    top: 19px;
+    width: 24px;
+    height: 2px;
+}
+
+.menu-button span:nth-child(3) {
+    top: 26px;
+    width: 24px;
+    height: 2px;
+}
+
+.menu-button.active span:nth-child(1) {
+    top: 19px;
+    transform: rotate(45deg);
+    width: 24px;
+    height: 2px;
+}
+
+.menu-button.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-button.active span:nth-child(3) {
+    top: 19px;
+    transform: rotate(-45deg);
+    width: 24px;
+    height: 2px;
 }
 
 .close-button {
@@ -363,42 +438,41 @@ html, body {
     animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Swipe Indicator */
-.swipe-indicator {
+/* Edge Swipe Indicators */
+.swipe-edge-left,
+.swipe-edge-right {
     position: fixed;
-    bottom: 180px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 60px;
+    height: 120px;
     display: flex;
-    gap: 8px;
+    align-items: center;
+    justify-content: center;
     z-index: 200;
-    opacity: 0;
-    animation: swipeHint 3s ease-in-out 1s 3;
+    opacity: 0.5;
     pointer-events: none;
+    transition: opacity 0.3s ease;
 }
 
-.swipe-indicator svg {
-    width: 24px;
-    height: 24px;
-    fill: rgba(255, 255, 255, 0.6);
+.swipe-edge-left {
+    left: 0;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.2), transparent);
+    border-radius: 0 40px 40px 0;
 }
 
-@keyframes swipeHint {
-    0%, 100% {
-        opacity: 0;
-        transform: translateX(-50%) translateX(0);
-    }
-    10%, 40% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 1;
-        transform: translateX(-50%) translateX(-15px);
-    }
-    60%, 90% {
-        opacity: 1;
-        transform: translateX(-50%) translateX(0);
-    }
+.swipe-edge-right {
+    right: 0;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.2), transparent);
+    border-radius: 40px 0 0 40px;
+}
+
+.swipe-edge-left svg,
+.swipe-edge-right svg {
+    width: 28px;
+    height: 28px;
+    fill: rgba(255, 255, 255, 0.7);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 /* Landscape Mobile */
