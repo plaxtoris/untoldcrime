@@ -58,11 +58,12 @@ if __name__ == "__main__":
         "Betrügerische Pflegedienst-Abrechnung in Brandenburg, fiktive Patienten",
         "CEO-Fraud bei Mittelständler in Baden-Württemberg, gefälschte E-Mail kostet 2 Millionen",
     ]
-    with ProcessPoolExecutor(max_workers=3) as executor:
-        futures = {executor.submit(generate, model="gemini-2.5-pro", word_limit=5000, setting=setting): setting for setting in settings}
-        for future in tqdm(as_completed(futures), total=len(settings), desc="Generating stories"):
-            future.result()
+    # with ProcessPoolExecutor(max_workers=3) as executor:
+    #     futures = {executor.submit(generate, model="gemini-2.5-pro", word_limit=5000, setting=setting): setting for setting in settings}
+    #     for future in tqdm(as_completed(futures), total=len(settings), desc="Generating stories"):
+    #         future.result()
 
+    generate(model="gemini-2.5-pro", word_limit=500, setting=settings[1])
     # count_data()
-    clean_data()
+    # clean_data()
     print(f"\n>>> runtime {(time.time() - t0):.1f} sec\n\n")

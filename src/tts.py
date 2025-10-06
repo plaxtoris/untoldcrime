@@ -53,7 +53,7 @@ def speak(text, filepath):
             client = texttospeech.TextToSpeechLongAudioSynthesizeClient()
             input = texttospeech.SynthesisInput(text=text)
             audio_config = texttospeech.AudioConfig(audio_encoding=texttospeech.AudioEncoding.LINEAR16)
-            voice = texttospeech.VoiceSelectionParams(language_code="de-DE", name="de-DE-Chirp3-HD-Gacrux")  # Laomedeia # Leda # Pulcherrima # Sulafat
+            voice = texttospeech.VoiceSelectionParams(language_code="de-DE", name="de-DE-Chirp3-HD-Pulcherrima")  # Laomedeia # Leda # Pulcherrima # Sulafat
             parent = f"projects/zalazium-gmbh/locations/us-central1"
             request = texttospeech.SynthesizeLongAudioRequest(parent=parent, input=input, audio_config=audio_config, voice=voice, output_gcs_uri=f"gs://zalazium/{filename}")
             operation = client.synthesize_long_audio(request=request)
