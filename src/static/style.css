@@ -437,11 +437,11 @@ html, body {
 
 .story-content {
     position: fixed;
-    bottom: 120px;
+    bottom: 0;
     left: 0;
     right: 0;
     padding-top: var(--space-4xl);
-    padding-bottom: var(--space-xl);
+    padding-bottom: calc(16px + var(--space-lg) + 56px + var(--space-md) + 4px + var(--space-md) + var(--space-lg) + env(safe-area-inset-bottom));
     padding-left: var(--space-2xl);
     padding-right: var(--space-2xl);
     z-index: var(--z-content);
@@ -463,19 +463,6 @@ html, body {
     line-height: var(--line-height-base);
     color: var(--color-text-secondary);
     text-shadow: var(--shadow-text-sm);
-}
-
-/* Gradient Bridge between story-content and audio-player */
-.audio-player::before {
-    content: '';
-    position: absolute;
-    bottom: 100%;
-    left: 0;
-    right: 0;
-    height: 120px;
-    background: linear-gradient(to top, rgba(10, 10, 10, 0.85), transparent);
-    pointer-events: none;
-    z-index: -1;
 }
 
 /* Audio Player */
@@ -519,14 +506,35 @@ html, body {
     box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
 }
 
+.play-button::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: var(--radius-full);
+    background: radial-gradient(circle at center, rgba(255, 68, 68, 0.4), transparent 70%);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    pointer-events: none;
+}
+
 .play-button:hover {
     background: var(--color-primary-hover);
     box-shadow: 0 6px 16px rgba(255, 68, 68, 0.4);
+    transform: scale(1.05);
+}
+
+.play-button:hover::after {
+    opacity: 1;
+    animation: playButtonPulse 2s ease-in-out infinite;
 }
 
 .play-button:active {
     transform: scale(0.95);
     box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3);
+}
+
+.play-button.playing {
+    animation: subtleHeartbeat 3s ease-in-out infinite;
 }
 
 .play-button:focus-visible {
@@ -545,12 +553,30 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform var(--transition-base), background var(--transition-base);
+    transition: transform var(--transition-base), background var(--transition-base), box-shadow var(--transition-base);
     position: relative;
+}
+
+.skip-button::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: var(--radius-full);
+    background: radial-gradient(circle at center, rgba(255, 68, 68, 0.3), transparent 70%);
+    opacity: 0;
+    transition: opacity var(--transition-slow);
+    pointer-events: none;
 }
 
 .skip-button:hover {
     background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.2);
+}
+
+.skip-button:hover::before {
+    opacity: 1;
+    animation: ripplePulse 1.5s ease-out infinite;
 }
 
 .skip-button:active {
@@ -566,6 +592,16 @@ html, body {
     width: 24px;
     height: 24px;
     fill: var(--color-text-tertiary);
+    transition: fill var(--transition-base), transform var(--transition-base);
+}
+
+.skip-button:hover svg {
+    fill: var(--color-text-primary);
+    transform: scale(1.1);
+}
+
+.skip-button:active svg {
+    transform: scale(0.9);
 }
 
 .play-icon, .pause-icon {
@@ -633,6 +669,7 @@ html, body {
     width: 0%;
     transition: width 0.1s linear;
     position: relative;
+    box-shadow: 0 0 8px rgba(255, 68, 68, 0.3);
 }
 
 .progress-bar::after {
@@ -646,12 +683,13 @@ html, body {
     background: var(--color-primary);
     border-radius: var(--radius-full);
     opacity: 0;
-    transition: opacity var(--transition-base);
+    transition: opacity var(--transition-base), transform var(--transition-base);
     box-shadow: 0 2px 8px rgba(255, 68, 68, 0.4);
 }
 
 .progress-container:hover .progress-bar::after {
     opacity: 1;
+    animation: progressPulse 1.5s ease-in-out infinite;
 }
 
 /* Content Pages (Impressum & About) */
@@ -811,6 +849,57 @@ html, body {
     }
 }
 
+@keyframes ripplePulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+@keyframes playButtonPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.3;
+    }
+}
+
+@keyframes subtleHeartbeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    14% {
+        transform: scale(1.02);
+    }
+    28% {
+        transform: scale(1);
+    }
+    42% {
+        transform: scale(1.02);
+    }
+    56% {
+        transform: scale(1);
+    }
+}
+
+@keyframes progressPulse {
+    0%, 100% {
+        transform: translateY(-50%) scale(1);
+        box-shadow: 0 2px 8px rgba(255, 68, 68, 0.4);
+    }
+    50% {
+        transform: translateY(-50%) scale(1.2);
+        box-shadow: 0 2px 16px rgba(255, 68, 68, 0.6);
+    }
+}
+
 .story-card {
     animation: fadeIn 0.4s ease-out;
 }
@@ -943,14 +1032,10 @@ html, body {
 @media (max-height: 500px) and (orientation: landscape) {
     .story-content {
         padding-top: var(--space-xl);
-        padding-bottom: var(--space-md);
+        padding-bottom: calc(12px + var(--space-md) + 48px + var(--space-sm) + 4px + var(--space-sm) + var(--space-md) + env(safe-area-inset-bottom));
         padding-left: var(--space-xl);
         padding-right: var(--space-xl);
-        bottom: 90px;
-    }
-
-    .audio-player::before {
-        height: 90px;
+        bottom: 0;
     }
 
     .story-title {
