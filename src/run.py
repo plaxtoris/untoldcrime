@@ -43,5 +43,5 @@ if __name__ == "__main__":
     generate(model=model, word_limit=1000, setting="Bitcoin mining auf Teneriffa, Russische MAfia bekommt Wind davon")
 
     # count_data()
-    clean_data()
+    # clean_data()
     print(f"\n>>> runtime {(time.time() - t0):.1f} sec\n\n")
