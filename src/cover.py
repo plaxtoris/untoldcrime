@@ -4,11 +4,7 @@ from google.auth.transport.requests import Request
 from google.oauth2 import service_account
 from pathlib import Path
 from typing import Optional
-from config import (
-    GOOGLE_CREDENTIALS_PATH,
-    GOOGLE_PROJECT,
-    GOOGLE_LOCATION
-)
+from config import GOOGLE_CREDENTIALS_PATH, GOOGLE_PROJECT, GOOGLE_LOCATION
 import requests
 import base64
 import logging
@@ -16,13 +12,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def generate_cover(
-    topic: str,
-    output_dir: Path,
-    model: str = "imagen-4.0-generate-001",
-    number_of_images: int = 1,
-    aspect_ratio: str = "1:1"
-) -> bool:
+def generate_cover(topic: str, output_dir: Path, model: str = "imagen-4.0-generate-001", number_of_images: int = 1, aspect_ratio: str = "1:1") -> bool:
     """Generate a cover image using Google Imagen.
 
     Args:
@@ -45,13 +35,7 @@ def generate_cover(
             return False
 
         # Make API request
-        predictions = _call_imagen_api(
-            creds=creds,
-            prompt=prompt,
-            model=model,
-            number_of_images=number_of_images,
-            aspect_ratio=aspect_ratio
-        )
+        predictions = _call_imagen_api(creds=creds, prompt=prompt, model=model, number_of_images=number_of_images, aspect_ratio=aspect_ratio)
 
         if not predictions:
             return False
@@ -73,7 +57,7 @@ def _build_prompt(topic: str) -> str:
     Returns:
         Formatted prompt
     """
-    return f"""Create an extremely appealing cover image for a true crime audio web app about: {topic}
+    return f"""Create an extremely appealing image for a true crime audio web app about: {topic}
 
     VERY IMPORTANT: NO TEXT, NO LETTERS, NO WORDS, NO TYPOGRAPHY whatsoever!
     Visual imagery only. Pure photographic/artistic composition without any text elements.
@@ -91,10 +75,7 @@ def _get_credentials() -> Optional[service_account.Credentials]:
             logger.error(f"Credentials file not found: {GOOGLE_CREDENTIALS_PATH}")
             return None
 
-        creds = service_account.Credentials.from_service_account_file(
-            str(GOOGLE_CREDENTIALS_PATH),
-            scopes=["https://www.googleapis.com/auth/cloud-platform"]
-        )
+        creds = service_account.Credentials.from_service_account_file(str(GOOGLE_CREDENTIALS_PATH), scopes=["https://www.googleapis.com/auth/cloud-platform"])
         creds.refresh(Request())
         return creds
 
@@ -103,13 +84,7 @@ def _get_credentials() -> Optional[service_account.Credentials]:
         return None
 
 
-def _call_imagen_api(
-    creds: service_account.Credentials,
-    prompt: str,
-    model: str,
-    number_of_images: int,
-    aspect_ratio: str
-) -> Optional[list[dict]]:
+def _call_imagen_api(creds: service_account.Credentials, prompt: str, model: str, number_of_images: int, aspect_ratio: str) -> Optional[list[dict]]:
     """Call the Imagen API.
 
     Args:
@@ -123,11 +98,7 @@ def _call_imagen_api(
         List of predictions or None on failure
     """
     try:
-        url = (
-            f"https://{GOOGLE_LOCATION}-aiplatform.googleapis.com/v1/"
-            f"projects/{GOOGLE_PROJECT}/locations/{GOOGLE_LOCATION}/"
-            f"publishers/google/models/{model}:predict"
-        )
+        url = f"https://{GOOGLE_LOCATION}-aiplatform.googleapis.com/v1/" f"projects/{GOOGLE_PROJECT}/locations/{GOOGLE_LOCATION}/" f"publishers/google/models/{model}:predict"
 
         payload = {
             "instances": [{"prompt": prompt}],
@@ -142,10 +113,7 @@ def _call_imagen_api(
             },
         }
 
-        headers = {
-            "Authorization": f"Bearer {creds.token}",
-            "Content-Type": "application/json"
-        }
+        headers = {"Authorization": f"Bearer {creds.token}", "Content-Type": "application/json"}
 
         response = requests.post(url, headers=headers, json=payload, timeout=120)
         response.raise_for_status()

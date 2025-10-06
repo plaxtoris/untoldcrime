@@ -17,35 +17,25 @@ logger = logging.getLogger(__name__)
 
 
 STORY_SETTINGS = [
-    # Psychologische Thriller & Beziehungsdramen
-    "Narzisstischer Missbrauch mit fatalem Ende: Eine Frau verschwindet spurlos, ihr 'perfekter' Ehemann gerät ins Visier der Ermittler, die ein Netz aus psychologischer Manipulation aufdecken.",
-    "KI-gestütztes Stalking: Ein Tech-Unternehmer nutzt Deepfake-Technologie, um seine Ex-Freundin in den Wahnsinn zu treiben – die Polizei steht vor einem digitalen Phantom [3, 5].",
-    "Toxische Freundschaft in einer Yoga-Community in Berlin-Kreuzberg: Ein Todesfall bei einem Retreat wird als Unfall abgetan, doch eine Freundin vermutet Mord aus Neid und Eifersucht.",
-    "Münchhausen-by-Proxy-Syndrom: Eine junge Mutter und Influencerin wird gefeiert, während ihr Kind unerklärlich krank ist. Ein Kinderarzt schöpft Verdacht.",
-    "Das Doppelleben eines Familienvaters: Nach seinem plötzlichen Tod entdeckt seine Frau, dass er eine zweite Identität und eine andere Familie in einer Parallelwelt hatte.",
-    # High-Tech & Mystery
-    "Der 'Hypnose-Bankraub': Eine Serie von Überfällen in Hannover, bei denen die Angestellten den Tätern freiwillig helfen. Die einzige Spur ist ein mysteriöser Psychologe.",
-    "Bitcoin-Erpressung mit geklonter Stimme: Ein Manager überweist Millionen, nachdem er einen Anruf von seiner vermeintlich entführten Tochter erhält, deren Stimme per KI geklont wurde [4].",
-    "Verschwunden im digitalen Nichts: Ein Journalist, der zu Betrugsmaschen mit KI-Handelsplattformen recherchiert, löst sich online auf – alle seine Profile und Daten sind gelöscht [3].",
-    "Kindheitstrauma als Auslöser: Eine Reihe von Sabotageakten in einem Nobel-Internat am Chiemsee führt zu einem Verbrechen, das 20 Jahre zurückliegt.",
-    "Die 'prophetische' Künstlerin: Eine Malerin mit diagnostizierter Schizophrenie malt Verbrechen, bevor sie geschehen. Ist sie Medium oder Täterin?",
-    # Urban Crime & Gesellschaft
-    "Tödliche Gentrifizierung in Hamburg-Ottensen: Ein Bauprojekt wird zum Schauplatz eines Mordes. Die Verdächtigen reichen von verdrängten Mietern bis zu skrupellosen Investoren.",
-    "Escort-Mord auf dem Hamburger Kiez: Der Tod einer Edelprostituierten enthüllt die geheimen Verstrickungen von Politik und Wirtschaft im Rotlichtmilieu.",
-    "Social-Media-Challenge mit Todesfolge: Ein Jugendlicher stirbt bei einer riskanten 'Mutprobe'. Die Ermittlungen decken auf, dass ein anonymer 'Meister' die Jugendlichen online manipuliert.",
-    "Der 'saubere' Drogenring: Designer-Drogen werden über eine Kette von exklusiven Fitnessstudios in Düsseldorf vertrieben. Die Ermittler stoßen auf eine Mauer des Schweigens.",
-    "Betrug im Food-Blogger-Milieu: Ein aufstrebender Koch in Leipzig deckt auf, dass ein berühmter Restaurantkritiker Bewertungen verkauft – und wird daraufhin massiv bedroht.",
-    # Unglaubliche Wendungen & Twists
-    "Der falsche Zeuge: Ein Mann wird für einen Mord verurteilt, den er live im Fernsehen gesehen haben will. Jahre später beweist ein Podcast, dass seine Erinnerung eine Fälschung war.",
-    "Das vererbte Verbrechen: Eine junge Frau erbt ein abgeschiedenes Haus im Harz und findet das Tagebuch ihrer Großmutter, das ein ungelöstes Verbrechen aus den 70ern beschreibt – mit erschreckenden Parallelen zur Gegenwart.",
-    "Gedächtnisverlust nach einem Überfall: Das Opfer kann sich an nichts erinnern, aber sein Unterbewusstsein liefert in Träumen kryptische Hinweise, die zum Täter führen.",
-    "Organhandel im Wellness-Hotel: In einem Luxus-Resort an der Ostsee verschwinden Gäste. Eine verdeckte Ermittlerin stößt auf ein perfides medizinisches Netzwerk.",
-    "Der inszenierte Absturz: Eine reiche Erbin täuscht ihren eigenen Tod bei einem Segelunfall vor, um unterzutauchen – doch jemand aus ihrem alten Leben spürt sie auf.",
+    # Digitale Abgründe & Moderne Verbrechen
+    "Mord im Smart Home: Ein Tech-Mogul stirbt in seiner vollautomatisierten Villa in Grünwald. Die Polizei vermutet einen Unfall, doch eine IT-Forensikerin entdeckt, dass das Haus selbst zur Tatwaffe umprogrammiert wurde.",
+    "Rache für die Oma: Nachdem ihre Großmutter von einem 'Love Scammer' ausgenommen wird, nutzt eine junge Datenanalystin ihre Fähigkeiten, um den Betrüger digital zu jagen – und stößt auf ein internationales Geldwäsche-Netzwerk.",
+    "Game Over in Köln: Ein E-Sport-Profi stirbt vor einem wichtigen Finale an einer Überdosis Aufputschmittel. Sein größter Rivale gerät in Verdacht, doch die Spur führt zu einem Wettsyndikat, das Matches manipuliert.",
+    # Gesellschaftliche Risse & Subkulturen
+    "Tod im Bunker: Der Anführer einer Prepper-Gruppe in der Eifel wird tot in seinem unterirdischen Versteck gefunden. Die Ermittler tauchen ein in eine Welt aus Paranoia, Verschwörungstheorien und internen Machtkämpfen.",
+    "Burnout oder Mord? Der verdächtige Suizid eines Entwicklers in der Berliner Startup-Szene. Ein Whistleblower behauptet, der gefeierte CEO habe ihn durch toxische 'Hustle Culture' in den Tod getrieben.",
+    "Radikaler Umweltschutz mit Todesfolge: Ein Aktivist, der eine Firma in der Lausitz sabotiert hat, wird ermordet. War es die Rache des Konzerns oder ein interner Konflikt in der eskalierenden Bewegung?",
+    # Psychologische Twists & Familiendramen
+    "Tödliche Erleuchtung: Ein Mitglied eines exklusiven Selbsthilfe-Kults stirbt bei einem Ritual in einer Villa im Taunus. Während die Anhänger von einem Unfall sprechen, schleust die Familie des Opfers einen Privatdetektiv in die sektenartige Gemeinschaft ein.",
+    "Die falsche Schwester: Jahrzehnte nach einer Entführung taucht eine Frau auf, die per DNA-Test als die vermisste Schwester identifiziert wird. Doch ein misstrauischer Bruder deckt auf, dass die 'Heimkehrerin' eine Betrügerin mit einem tödlichen Plan ist.",
+    # Klassische Verbrechen im neuen Gewand
+    "Das gefälschte Meisterwerk: Ein renommierter Kunstexperte wird in München ermordet, kurz nachdem er ein wiederentdecktes Gemälde als Sensation gefeiert hat. Die Ermittlungen enthüllen einen Fälscherring in den höchsten Kreisen des Kunstmarktes.",
+    "Der Fluch des Lottogewinns: Eine Tippgemeinschaft aus einem Dorf in Brandenburg gewinnt den Jackpot. Kurz darauf stirbt ein Mitglied nach dem anderen durch seltsame 'Unfälle'. Ein klassischer Fall von Gier – oder steckt mehr dahinter?",
 ]
 
 
 def clean_invalid_stories() -> None:
-    """Remove stories that don't meet duration requirements."""
+    """Remove stories that don't meet duration requirements or are missing cover images."""
     logger.info("Cleaning invalid stories...")
     mp3_files = list(Path(DATA_DIR).rglob("*.mp3"))
     total_duration = 0.0
@@ -55,10 +45,16 @@ def clean_invalid_stories() -> None:
         try:
             audio = MP3(mp3_file)
             duration_min = audio.info.length / 60
+            cover_path = mp3_file.parent / "cover.png"
 
             if duration_min < MIN_STORY_DURATION_MIN or duration_min > MAX_STORY_DURATION_MIN:
                 rel_path = mp3_file.relative_to(DATA_DIR)
                 logger.info(f"Removing invalid story: {rel_path} ({duration_min:.2f} min)")
+                shutil.rmtree(mp3_file.parent)
+                removed_count += 1
+            elif not cover_path.exists():
+                rel_path = mp3_file.relative_to(DATA_DIR)
+                logger.info(f"Removing story without cover: {rel_path}")
                 shutil.rmtree(mp3_file.parent)
                 removed_count += 1
             else:
@@ -72,14 +68,19 @@ def clean_invalid_stories() -> None:
 
 
 def count_stories() -> None:
-    """Count and display story statistics."""
-    mp3_counts = Counter(p.parent.relative_to(DATA_DIR) for p in Path(DATA_DIR).rglob("*.mp3"))
+    """Display total playtime of all stories."""
+    mp3_files = list(Path(DATA_DIR).rglob("*.mp3"))
+    total_duration = 0.0
 
-    logger.info("Story counts by directory:")
-    for subdir, count in sorted(mp3_counts.items()):
-        logger.info(f"  {str(subdir):<20} {count} files")
+    for mp3_file in mp3_files:
+        try:
+            audio = MP3(mp3_file)
+            total_duration += audio.info.length / 60
+        except Exception as e:
+            logger.error(f"Error processing {mp3_file}: {e}")
 
-    logger.info(f"Total stories: {sum(mp3_counts.values())}")
+    total_hours = total_duration / 60
+    logger.info(f"Total playtime: {total_hours:.1f}h ({len(mp3_files)} stories)")
 
 
 def generate_batch(settings: list[str], model: str = DEFAULT_MODEL, word_limit: int = DEFAULT_WORD_LIMIT, max_workers: int = 3) -> None:
@@ -113,12 +114,10 @@ def main() -> None:
     start_time = time.time()
 
     # Generate stories
-    generate_batch(STORY_SETTINGS, max_workers=3)
+    generate_batch(STORY_SETTINGS, max_workers=5)
 
-    # Clean up invalid stories
+    # cleanup
     clean_invalid_stories()
-
-    # Show statistics
     count_stories()
 
     elapsed = time.time() - start_time
