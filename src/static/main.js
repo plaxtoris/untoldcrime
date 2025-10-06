@@ -19,6 +19,8 @@ const AppState = {
 const DOM = {
     audioPlayer: document.getElementById('audioPlayer'),
     playButton: document.getElementById('playButton'),
+    skipBackButton: document.getElementById('skipBackButton'),
+    skipForwardButton: document.getElementById('skipForwardButton'),
     progressBar: document.getElementById('progressBar'),
     progressContainer: document.getElementById('progressContainer'),
     currentTimeDisplay: document.getElementById('currentTime'),
@@ -233,6 +235,23 @@ function updatePlayButtonState(playing) {
 
 if (DOM.playButton) {
     DOM.playButton.addEventListener('click', togglePlay);
+}
+
+// Skip Back/Forward Buttons
+if (DOM.skipBackButton && DOM.audioPlayer) {
+    DOM.skipBackButton.addEventListener('click', () => {
+        if (DOM.audioPlayer.currentTime) {
+            DOM.audioPlayer.currentTime = Math.max(0, DOM.audioPlayer.currentTime - 10);
+        }
+    });
+}
+
+if (DOM.skipForwardButton && DOM.audioPlayer) {
+    DOM.skipForwardButton.addEventListener('click', () => {
+        if (DOM.audioPlayer.duration) {
+            DOM.audioPlayer.currentTime = Math.min(DOM.audioPlayer.duration, DOM.audioPlayer.currentTime + 10);
+        }
+    });
 }
 
 if (DOM.audioPlayer) {

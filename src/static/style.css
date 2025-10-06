@@ -437,7 +437,7 @@ html, body {
 
 .story-content {
     position: fixed;
-    bottom: 80px;
+    bottom: 120px;
     left: 0;
     right: 0;
     padding-top: var(--space-4xl);
@@ -472,7 +472,7 @@ html, body {
     bottom: 100%;
     left: 0;
     right: 0;
-    height: 80px;
+    height: 120px;
     background: linear-gradient(to top, rgba(10, 10, 10, 0.85), transparent);
     pointer-events: none;
     z-index: -1;
@@ -491,14 +491,22 @@ html, body {
     padding: var(--space-lg) var(--space-2xl) calc(var(--space-lg) + env(safe-area-inset-bottom));
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-md);
+}
+
+.playback-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xl);
 }
 
 .play-button {
-    width: 48px;
-    height: 48px;
-    min-width: 48px;
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
     border-radius: var(--radius-full);
     background: var(--color-primary);
     border: none;
@@ -526,6 +534,40 @@ html, body {
     outline-offset: 3px;
 }
 
+.skip-button {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition-base), background var(--transition-base);
+    position: relative;
+}
+
+.skip-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.skip-button:active {
+    transform: scale(0.95);
+}
+
+.skip-button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+}
+
+.skip-button svg {
+    width: 24px;
+    height: 24px;
+    fill: var(--color-text-primary);
+}
+
 .play-icon, .pause-icon {
     width: var(--space-2xl);
     height: var(--space-2xl);
@@ -550,7 +592,7 @@ html, body {
 }
 
 .player-controls {
-    flex: 1;
+    width: 100%;
     display: flex;
     align-items: center;
     gap: var(--space-md);
@@ -904,11 +946,11 @@ html, body {
         padding-bottom: var(--space-md);
         padding-left: var(--space-xl);
         padding-right: var(--space-xl);
-        bottom: 60px;
+        bottom: 90px;
     }
 
     .audio-player::before {
-        height: 60px;
+        height: 90px;
     }
 
     .story-title {
@@ -922,13 +964,28 @@ html, body {
 
     .audio-player {
         padding: var(--space-md) var(--space-xl) calc(var(--space-md) + env(safe-area-inset-bottom));
+        gap: var(--space-sm);
+    }
+
+    .playback-controls {
         gap: var(--space-md);
     }
 
     .play-button {
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+    }
+
+    .skip-button {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+    }
+
+    .skip-button svg {
+        width: 20px;
+        height: 20px;
     }
 
     .play-icon, .pause-icon {

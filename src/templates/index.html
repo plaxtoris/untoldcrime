@@ -71,20 +71,34 @@
         </button>
 
         <div class="audio-player" role="region" aria-label="Audio-Player">
-            <button class="play-button" id="playButton" aria-label="Abspielen" aria-pressed="false">
-                <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M8 5v14l11-7z"/>
-                </svg>
-                <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
-                </svg>
-            </button>
             <div class="player-controls">
                 <time class="time-display" id="currentTime" aria-label="Aktuelle Zeit">00:00</time>
                 <div class="progress-container" id="progressContainer" role="slider" aria-label="Audio-Fortschritt" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
                     <div class="progress-bar" id="progressBar"></div>
                 </div>
                 <time class="time-display" id="duration" aria-label="Gesamtdauer">00:00</time>
+            </div>
+            <div class="playback-controls">
+                <button class="skip-button" id="skipBackButton" aria-label="10 Sekunden zurück">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                        <text x="12" y="16" text-anchor="middle" font-size="7" font-weight="bold" fill="currentColor">10</text>
+                    </svg>
+                </button>
+                <button class="play-button" id="playButton" aria-label="Abspielen" aria-pressed="false">
+                    <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                    </svg>
+                </button>
+                <button class="skip-button" id="skipForwardButton" aria-label="10 Sekunden vor">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/>
+                        <text x="12" y="16" text-anchor="middle" font-size="7" font-weight="bold" fill="currentColor">10</text>
+                    </svg>
+                </button>
             </div>
         </div>
     </main>
