@@ -1,1 +1,67 @@
-<!-- todo -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>deepcrime - True Crime Stories</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="/static/logo.jpg" alt="deepcrime">
+                <span>deepcrime</span>
+            </div>
+            <button class="menu-button" id="menuButton" aria-label="Menu öffnen">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <nav class="menu" id="menu">
+        <ul>
+            <li><a href="/impressum">Impressum</a></li>
+        </ul>
+    </nav>
+
+    <main class="container" id="container">
+        <div class="story-slider" id="storySlider">
+            <div class="story-card" id="storyCard">
+                <div class="cover-image" id="coverImage"></div>
+                <div class="story-content">
+                    <h1 class="story-title" id="storyTitle">Lädt...</h1>
+                    <p class="story-summary" id="storySummary"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="audio-player">
+            <button class="play-button" id="playButton" aria-label="Abspielen">
+                <svg class="play-icon" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                <svg class="pause-icon" viewBox="0 0 24 24">
+                    <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                </svg>
+            </button>
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="time-display">
+                <span id="currentTime">00:00</span>
+                <span id="duration">00:00</span>
+            </div>
+        </div>
+    </main>
+
+    <audio id="audioPlayer" preload="metadata"></audio>
+
+    <script src="/static/main.js"></script>
+</body>
+</html>
