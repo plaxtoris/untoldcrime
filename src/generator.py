@@ -1,30 +1,67 @@
+"""Story generation orchestration."""
+
+from pathlib import Path
+from typing import Optional
 from config import DATA_DIR
-from cover import cover
-from llm import prompt
-from tts import speak
+from cover import generate_cover
+from llm import generate_story
+from tts import synthesize_speech
+from utils import save_json
 import secrets
-import os
-import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
-def generate(model="azure-gpt-4.1", word_limit=100, setting="Bitcoin Darknet"):
-    # story
-    output = prompt(model=model, word_limit=word_limit, setting=setting)
+def generate_complete_story(
+    model: str = "gemini-2.5-pro",
+    word_limit: int = 4000,
+    setting: str = "Bitcoin Darknet"
+) -> Optional[dict[str, str]]:
+    """Generate a complete story with audio and cover image.
 
-    # path
-    dir = os.path.join(DATA_DIR, secrets.token_hex(8))
-    os.makedirs(dir, exist_ok=True)
-    filepath = os.path.join(dir, "story.wav")
+    Args:
+        model: LLM model to use
+        word_limit: Target word count for the story
+        setting: Story setting/theme
 
-    # cover
-    cover(topic=output["summary"], dir=dir)
+    Returns:
+        Story metadata dictionary or None on failure
+    """
+    try:
+        # Generate story text
+        logger.info(f"Generating story: {setting}")
+        story_data = generate_story(model=model, word_limit=word_limit, setting=setting)
 
-    # audio
-    speak(text=output["story"], filepath=filepath)
+        if not story_data:
+            logger.error("Story generation failed")
+            return None
 
-    # save story.json
-    story_json_path = os.path.join(dir, "story.json")
-    with open(story_json_path, "w", encoding="utf-8") as f:
-        json.dump(output, f, ensure_ascii=False, indent=2)
+        # Create output directory
+        story_dir = DATA_DIR / secrets.token_hex(8)
+        story_dir.mkdir(parents=True, exist_ok=True)
+        logger.info(f"Created story directory: {story_dir}")
 
-    return output
+        # Generate cover image
+        logger.info("Generating cover image")
+        if not generate_cover(topic=story_data["summary"], output_dir=story_dir):
+            logger.warning("Cover generation failed, continuing anyway")
+
+        # Generate audio
+        logger.info("Synthesizing speech")
+        audio_path = story_dir / "story.wav"
+        if not synthesize_speech(text=story_data["story"], output_path=audio_path):
+            logger.error("Speech synthesis failed")
+            return None
+
+        # Save story metadata
+        story_json_path = story_dir / "story.json"
+        if not save_json(story_data, story_json_path):
+            logger.warning("Failed to save story metadata")
+
+        logger.info(f"Story generation complete: {story_dir}")
+        return story_data
+
+    except Exception as e:
+        logger.error(f"Story generation failed: {e}")
+        return None

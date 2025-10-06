@@ -1,55 +1,84 @@
+"""Database operations for analytics and statistics."""
+
 import sqlite3
 from pathlib import Path
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
+from typing import Optional
 from config import DATABASE_PATH
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Timezone für Deutschland (automatische Sommer-/Winterzeit)
 TIMEZONE = ZoneInfo("Europe/Berlin")
 
 
-def init_database():
+def init_database() -> None:
     """Initialize the database with required tables and indexes."""
     DATABASE_PATH.parent.mkdir(parents=True, exist_ok=True)
 
     conn = sqlite3.connect(str(DATABASE_PATH))
     cursor = conn.cursor()
 
-    # Create playtime_stats table
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS playtime_stats (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            story_id TEXT NOT NULL,
-            play_duration INTEGER NOT NULL,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    try:
+        # Create playtime_stats table
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS playtime_stats (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                story_id TEXT NOT NULL,
+                play_duration INTEGER NOT NULL,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+
+        # Create indexes for performance
+        cursor.execute(
+            "CREATE INDEX IF NOT EXISTS idx_timestamp ON playtime_stats(timestamp)"
         )
-    """)
+        cursor.execute(
+            "CREATE INDEX IF NOT EXISTS idx_story_id ON playtime_stats(story_id)"
+        )
 
-    # Create indexes for performance
-    cursor.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON playtime_stats(timestamp)")
-    cursor.execute("CREATE INDEX IF NOT EXISTS idx_story_id ON playtime_stats(story_id)")
+        conn.commit()
+        logger.info("Database initialized successfully")
 
-    conn.commit()
-    conn.close()
+    except sqlite3.Error as e:
+        logger.error(f"Database initialization failed: {e}")
+        raise
+    finally:
+        conn.close()
 
 
-def get_connection():
-    """Get a database connection with row factory."""
+def get_connection() -> sqlite3.Connection:
+    """Get a database connection with row factory.
+
+    Returns:
+        SQLite connection object
+    """
     conn = sqlite3.connect(str(DATABASE_PATH))
     conn.row_factory = sqlite3.Row
     return conn
 
 
-def track_playtime(story_id: str, play_duration: int):
-    """Record playtime for a story."""
+def track_playtime(story_id: str, play_duration: int) -> bool:
+    """Record playtime for a story.
+
+    Args:
+        story_id: Unique story identifier
+        play_duration: Duration in seconds
+
+    Returns:
+        True if successful, False otherwise
+    """
     if not story_id or play_duration < 0:
+        logger.warning(f"Invalid playtime data: story_id={story_id}, duration={play_duration}")
         return False
 
     conn = get_connection()
     cursor = conn.cursor()
 
     try:
-        # Speichere mit deutscher Zeit
         now = datetime.now(TIMEZONE)
         cursor.execute(
             "INSERT INTO playtime_stats (story_id, play_duration, timestamp) VALUES (?, ?, ?)",
@@ -57,20 +86,28 @@ def track_playtime(story_id: str, play_duration: int):
         )
         conn.commit()
         return True
-    except Exception as e:
-        print(f"Error tracking playtime: {e}")
+
+    except sqlite3.Error as e:
+        logger.error(f"Failed to track playtime: {e}")
         return False
     finally:
         conn.close()
 
 
-def get_stats_by_period(period: str = "24h"):
-    """Get aggregated playtime statistics by time period."""
+def get_stats_by_period(period: str = "24h") -> list[dict[str, any]]:
+    """Get aggregated playtime statistics by time period.
+
+    Args:
+        period: Time period for stats (24h, 7d, 30d, alltime)
+
+    Returns:
+        List of statistics dictionaries with 'label' and 'value' keys
+    """
     conn = get_connection()
     cursor = conn.cursor()
 
     now = datetime.now(TIMEZONE)
-    stats = []
+    stats: list[dict[str, any]] = []
 
     try:
         if period == "24h":

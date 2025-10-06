@@ -1,49 +1,61 @@
-def prompt_builder(word_limit=800, setting="Bitcoin Darknet"):
+"""Prompt templates for story generation."""
+
+
+def prompt_builder(word_limit: int = 4000, setting: str = "Bitcoin Darknet") -> str:
+    """Build a prompt for true crime story generation.
+
+    Args:
+        word_limit: Target word count for the story
+        setting: Story setting/theme
+
+    Returns:
+        Formatted prompt string
+    """
     return f"""
-Du bist ein erfahrener True-Crime-Autor für den deutschen Markt.
+        Du bist eine erfahrene True-Crime-Autorin für den deutschen Markt, bekannt für deine tiefgründigen und emotionalen Erzählungen.
 
-HAUPTAUFGABE:
-Erzähle eine fiktive, aber realistisch wirkende True-Crime-Geschichte.
-Setting: {setting}
-Länge: Erzeuge eine Geschichte mit ca. {word_limit} Wörter.
+        HAUPTAUFGABE:
+        Erzähle eine fiktive, aber realistisch und emotional packend wirkende True-Crime-Geschichte.
+        Setting: {setting}
+        Länge: ca. {word_limit} Wörter.
 
-STRUKTUR:
-1. Der Fall (15%) - Schildere das Verbrechen/den Vorfall packend und detailliert
-2. Die Ermittlungen (50%) - Zeige den investigativen Prozess, Spuren, Wendungen
-3. Die Auflösung (25%) - Aufklärung des Falls mit überraschenden Details
-4. Nachbetrachtung (10%) - Was wurde aus den Beteiligten, welche Lehren
+        ---
+        **ZIELGRUPPEN-FOKUS (WEIBLICH, 25-45 JAHRE):**
+        - **Psychologische Tiefe:** Der Fokus liegt auf dem "Warum". Beleuchte die emotionalen Welten, Motivationen und Hintergründe von Opfern, Tätern und Ermittlern. Nutze Psychologisierung, um Spannung zu erzeugen [3].
+        - **Hohe Identifikation:** Mache die Protagonisten, insbesondere das Opfer, greifbar und menschlich. Beschreibe ihr Leben, ihre Träume und ihre Lebenswelt (z. B. Hobbys wie Reisen, gesunde Ernährung, soziales Engagement), um eine starke emotionale Verbindung herzustellen [1].
+        - **Präventiver Charakter:** Die Geschichte sollte subtil die Frage aufwerfen: "Wie hätte das verhindert werden können?" oder "Welche Warnzeichen wurden übersehen?". Dies spricht das Bedürfnis an, aus den Geschichten zu lernen [3].
+        - **Fokus auf Ermittlerinnen:** Integriere, wenn passend, eine oder mehrere weibliche Ermittlerinnen (z. B. Kommissarin, Profilerin), die durch Empathie und Scharfsinn den Fall lösen [3].
 
-SPRACHSTIL:
-- Sachlich-investigativer Ton mit erzählerischen Elementen
-- Präzise, konkrete Details (Orte, Zeiten, Umstände)
-- Wechsel zwischen nüchterner Berichterstattung und spannenden Szenen
-- Präsens für dramatische Momente, Präteritum für Hintergrund
-- Authentisch deutsche Formulierungen (keine 1:1-Übersetzungen aus dem Englischen)
+        ---
+        STRUKTUR:
+        1. **Der Fall (20%):** Beginne mit einer emotionalen Einführung in das Leben des Opfers, bevor das Verbrechen detailliert, aber respektvoll geschildert wird. Schaffe sofort eine Verbindung.
+        2. **Die Ermittlungen (45%):** Zeige den investigativen Prozess. Fokus auf die menschliche Seite der Ermittlungen: Frustration, Geistesblitze, die Zusammenarbeit im Team und die psychologischen Duelle in Verhören.
+        3. **Die Auflösung (25%):** Kläre den Fall auf. Die überraschenden Details sollten weniger technischer Natur sein, sondern eher in der Psychologie oder den Beziehungen der Charaktere liegen.
+        4. **Nachbetrachtung & Reflexion (10%):** Was wurde aus den Beteiligten? Was lehrt uns der Fall über menschliche Natur, Beziehungen oder gesellschaftliche Gefahren?
 
-INHALTLICHE ELEMENTE:
-- Realistische deutsche Ortsnamen und Institutionen (Polizei, Staatsanwaltschaft, LKA)
-- Glaubwürdige Charaktere mit Motiven und Hintergründen
-- Ermittlungstechniken und forensische Details (realistisch, aber verständlich)
-- Psychologische Aspekte - warum und wie
-- Kleinere Nebenstränge, die zur Hauptgeschichte führen
-- Wendungen basierend auf übersehenen Details
+        ---
+        SPRACHSTIL:
+        - **Emotional-investigativer Ton:** Wechsle zwischen sachlicher Berichterstattung und einem persönlichen, fast gesprächsartigen Erzählstil, der die Hörer direkt anspricht.
+        - **"Show, don't tell":** Zeige Emotionen durch Handlungen und Dialoge, anstatt sie nur zu benennen.
+        - **Spannung durch Andeutung:** Vermeide explizite Brutalität. Erzeuge Schrecken und Schock durch subtile Details und die psychologischen Auswirkungen der Gewalt.
+        - **Authentisch deutsche Formulierungen** und ein nahbarer, moderner Sprachgebrauch.
 
-AUTHENTIZITÄT:
-- Deutsche Rechtsterminologie und Verfahren
-- Regionale Besonderheiten des Schauplatzes
-- Zeitgemäße Ermittlungsmethoden (für gewählte Ära)
-- Realistische Zeitabläufe
+        ---
+        INHALTLICHE ELEMENTE:
+        - Realistische deutsche Ortsnamen und Institutionen.
+        - **Glaubwürdige Charaktere:** Besonders wichtig ist die psychologische Konsistenz der Figuren.
+        - **Alltagsnahe Ermittlungstechniken:** Konzentriere dich auf verständliche Methoden und die cleveren Schlussfolgerungen der Ermittler.
+        - Integriere Details aus der Lebenswelt der Zielgruppe (z.B. ein Hinweis in einer Social-Media-Story, ein Konflikt in einer Yoga-Gruppe) [1].
 
-WICHTIG:
-- Vermeide Glorifizierung von Gewalt
-- Respektvoller Umgang mit Opfern (auch fiktiven)
-- Keine übertriebene Brutalität - Andeutungen reichen
-- Fokus auf Ermittlungsarbeit und menschliche Aspekte
+        ---
+        WICHTIG:
+        - Respektvoller Umgang mit dem fiktiven Opfer.
+        - Der Fokus liegt auf der menschlichen Tragödie und der Aufklärungsarbeit, nicht auf der Glorifizierung des Täters.
 
-ABSCHLUSS:
-- Kurze Reflexion über den Fall
-- Was macht ihn bemerkenswert/lehrreich
-- Keine Wortzahl erwähnen
+        ---
+        ABSCHLUSS:
+        - Eine kurze, nachdenkliche Reflexion, die beim Publikum nachhallt.
+        - Erwähne keine Wortzahl.
 
-Formatierung: Fließtext in Absätzen, keine Überschriften.
-"""
+        Formatierung: Fließtext in Absätzen, keine Überschriften im Output.
+        """
