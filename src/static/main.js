@@ -190,6 +190,22 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// Desktop: Click on edge indicators
+const swipeEdgeLeft = document.getElementById('swipeEdgeLeft');
+const swipeEdgeRight = document.getElementById('swipeEdgeRight');
+
+if (swipeEdgeLeft) {
+    swipeEdgeLeft.addEventListener('click', () => {
+        previousStory();
+    });
+}
+
+if (swipeEdgeRight) {
+    swipeEdgeRight.addEventListener('click', () => {
+        nextStory();
+    });
+}
+
 // Prevent Pull-to-Refresh on Mobile
 document.body.addEventListener('touchmove', (e) => {
     if (e.touches.length > 1) return;

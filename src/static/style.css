@@ -470,6 +470,19 @@ html, body {
     opacity: 0.5;
     pointer-events: none;
     transition: opacity 0.3s ease;
+    cursor: pointer;
+}
+
+@media (min-width: 768px) {
+    .swipe-edge-left,
+    .swipe-edge-right {
+        pointer-events: all;
+    }
+
+    .swipe-edge-left:hover,
+    .swipe-edge-right:hover {
+        opacity: 0.8;
+    }
 }
 
 .swipe-edge-left {
