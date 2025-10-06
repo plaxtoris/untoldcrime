@@ -751,8 +751,8 @@ html, body {
     align-items: center;
     justify-content: center;
     z-index: var(--z-navigation);
-    opacity: 0.2;
-    pointer-events: none;
+    opacity: 0.4;
+    pointer-events: all;
     transition: all var(--transition-slow);
     cursor: pointer;
     background: none;
@@ -760,10 +760,15 @@ html, body {
     padding: 0;
 }
 
+.swipe-edge-left:active,
+.swipe-edge-right:active {
+    opacity: 0.8;
+    transform: translateY(-50%) scale(0.95);
+}
+
 @media (min-width: 768px) {
     .swipe-edge-left,
     .swipe-edge-right {
-        pointer-events: all;
         opacity: 0.3;
     }
 
