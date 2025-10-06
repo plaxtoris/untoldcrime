@@ -1,7 +1,7 @@
 """FastAPI web server for the True Crime story application."""
 
-from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi import FastAPI, Request, Form, Query
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
@@ -17,6 +17,7 @@ from config import (
 )
 from utils import load_json
 import database
+import image_optimizer
 import argparse
 import uvicorn
 import random
@@ -170,6 +171,68 @@ async def api_get_random_story():
     if stories:
         return JSONResponse(content=random.choice(stories))
     return JSONResponse(content={"error": "No stories available"}, status_code=404)
+
+
+@app.get("/api/image/{story_id}/cover")
+async def api_get_optimized_cover(
+    story_id: str,
+    width: int = Query(default=800, ge=100, le=2048, description="Target width in pixels"),
+    quality: int = Query(default=85, ge=1, le=100, description="Image quality (1-100)"),
+    format: str = Query(default="webp", regex="^(webp|jpeg|png)$", description="Output format")
+):
+    """Get optimized cover image for a story.
+
+    Args:
+        story_id: Story identifier
+        width: Target width in pixels (100-2048)
+        quality: Image quality 1-100
+        format: Output format (webp, jpeg, png)
+
+    Returns:
+        Optimized image file or 404 error
+    """
+    try:
+        # Find original cover
+        original_path = Path(DATA_DIR) / story_id / "cover.png"
+
+        if not original_path.exists():
+            return JSONResponse(
+                content={"error": "Cover image not found"},
+                status_code=404
+            )
+
+        # Get or create optimized version
+        format_upper = format.upper()
+        optimized_path = image_optimizer.get_optimized_image(
+            original_path=original_path,
+            width=width,
+            quality=quality,
+            format=format_upper
+        )
+
+        # Determine media type
+        media_types = {
+            "WEBP": "image/webp",
+            "JPEG": "image/jpeg",
+            "PNG": "image/png"
+        }
+        media_type = media_types.get(format_upper, "image/png")
+
+        return FileResponse(
+            path=optimized_path,
+            media_type=media_type,
+            headers={
+                "Cache-Control": "public, max-age=31536000",  # 1 year
+                "Vary": "Accept"
+            }
+        )
+
+    except Exception as e:
+        logger.error(f"Error serving optimized image: {e}")
+        return JSONResponse(
+            content={"error": str(e)},
+            status_code=500
+        )
 
 
 @app.post("/api/playtime")

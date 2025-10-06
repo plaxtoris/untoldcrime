@@ -44,6 +44,29 @@ function formatTime(seconds) {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
 
+function getOptimalImageWidth() {
+    const dpr = window.devicePixelRatio || 1;
+    const screenWidth = window.innerWidth;
+    const targetWidth = Math.ceil(screenWidth * dpr);
+
+    // Use preset sizes to maximize cache hits
+    const sizes = [400, 600, 800, 1200, 1600, 2048];
+    return sizes.find(size => size >= targetWidth) || 2048;
+}
+
+function getOptimizedImageUrl(storyId, originalUrl) {
+    // Only optimize cover images
+    if (!originalUrl.includes('/cover.png')) {
+        return originalUrl;
+    }
+
+    const width = getOptimalImageWidth();
+    const supportsWebP = document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0;
+    const format = supportsWebP ? 'webp' : 'jpeg';
+
+    return `/api/image/${storyId}/cover?width=${width}&format=${format}&quality=85`;
+}
+
 function showLoading() {
     if (!AppState.isLoading) {
         AppState.isLoading = true;
@@ -175,7 +198,8 @@ function loadStory(story) {
 
     // Update UI
     if (DOM.coverImage) {
-        DOM.coverImage.style.backgroundImage = `url('${story.cover_url}')`;
+        const optimizedUrl = getOptimizedImageUrl(story.id, story.cover_url);
+        DOM.coverImage.style.backgroundImage = `url('${optimizedUrl}')`;
     }
     if (DOM.storyTitle) {
         DOM.storyTitle.textContent = story.title;
