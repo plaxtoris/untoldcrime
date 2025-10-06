@@ -55,6 +55,12 @@ async def impressum(request: Request):
     return templates.TemplateResponse("impressum.html", {"request": request})
 
 
+@app.get("/about", response_class=HTMLResponse)
+async def about(request: Request):
+    """Serve the about page."""
+    return templates.TemplateResponse("about.html", {"request": request})
+
+
 @app.get("/api/stories")
 async def get_stories():
     """API endpoint to get all available stories."""
