@@ -127,13 +127,14 @@ progressContainer.addEventListener('click', (e) => {
     audioPlayer.currentTime = percent * audioPlayer.duration;
 });
 
-// Swipe Functionality
+// Swipe Functionality (Touch + Mouse)
 let touchStartX = 0;
 let touchEndX = 0;
 let touchStartY = 0;
 let touchEndY = 0;
 let isDragging = false;
 
+// Touch Events
 storySlider.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
     touchStartY = e.changedTouches[0].screenY;
@@ -164,6 +165,53 @@ storySlider.addEventListener('touchend', () => {
         }
     }
 }, { passive: true });
+
+// Mouse Events (Desktop)
+let mouseStartX = 0;
+let mouseEndX = 0;
+let mouseStartY = 0;
+let mouseEndY = 0;
+let isMouseDragging = false;
+
+storySlider.addEventListener('mousedown', (e) => {
+    mouseStartX = e.clientX;
+    mouseStartY = e.clientY;
+    isMouseDragging = true;
+    storySlider.style.cursor = 'grabbing';
+});
+
+storySlider.addEventListener('mousemove', (e) => {
+    if (!isMouseDragging) return;
+    mouseEndX = e.clientX;
+    mouseEndY = e.clientY;
+});
+
+storySlider.addEventListener('mouseup', () => {
+    if (!isMouseDragging) return;
+    isMouseDragging = false;
+    storySlider.style.cursor = 'grab';
+
+    const diffX = mouseStartX - mouseEndX;
+    const diffY = Math.abs(mouseStartY - mouseEndY);
+
+    // Only trigger swipe if horizontal movement is greater than vertical
+    if (Math.abs(diffX) > 50 && diffY < 100) {
+        if (diffX > 0) {
+            // Dragged left - next story
+            nextStory();
+        } else {
+            // Dragged right - previous story
+            previousStory();
+        }
+    }
+});
+
+storySlider.addEventListener('mouseleave', () => {
+    if (isMouseDragging) {
+        isMouseDragging = false;
+        storySlider.style.cursor = 'grab';
+    }
+});
 
 // Navigation Functions
 function nextStory() {
