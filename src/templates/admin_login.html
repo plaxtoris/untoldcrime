@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Untold Crime</title>
+    <link rel="icon" type="image/svg+xml" href="/static/logo.svg">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="admin-login-container">
+        <div class="admin-login-card">
+            <div class="admin-login-header">
+                <h1>Admin Login</h1>
+                <p>Melde dich an, um auf das Dashboard zuzugreifen</p>
+            </div>
+
+            {% if error %}
+            <div class="admin-error-message">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST" action="/admin/login" class="admin-login-form">
+                <div class="admin-form-group">
+                    <label for="username">Benutzername</label>
+                    <input type="text" id="username" name="username" required autocomplete="username">
+                </div>
+
+                <div class="admin-form-group">
+                    <label for="password">Passwort</label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                </div>
+
+                <button type="submit" class="admin-login-button">Anmelden</button>
+            </form>
+
+            <div class="admin-back-link">
+                <a href="/">← Zurück zur Startseite</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -10,7 +10,9 @@ const AppState = {
     currentStory: null,
     isPlaying: false,
     isLoading: false,
-    error: null
+    error: null,
+    playbackStartTime: null,
+    lastPlaybackTime: 0
 };
 
 // ===== DOM ELEMENTS =====
@@ -75,6 +77,18 @@ function showError(title, message) {
         errorDiv.remove();
         AppState.error = null;
     }, 5000);
+}
+
+async function trackPlaytime(storyId, duration) {
+    try {
+        await fetch('/api/playtime', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ story_id: storyId, play_duration: Math.floor(duration) })
+        });
+    } catch (error) {
+        console.error('Failed to track playtime:', error);
+    }
 }
 
 function updateMenuState(isOpen) {
@@ -224,14 +238,26 @@ if (DOM.playButton) {
 if (DOM.audioPlayer) {
     DOM.audioPlayer.addEventListener('play', () => {
         updatePlayButtonState(true);
+        AppState.playbackStartTime = Date.now();
+        AppState.lastPlaybackTime = DOM.audioPlayer.currentTime;
     });
 
     DOM.audioPlayer.addEventListener('pause', () => {
         updatePlayButtonState(false);
+        if (AppState.playbackStartTime && AppState.currentStory) {
+            const duration = (Date.now() - AppState.playbackStartTime) / 1000;
+            trackPlaytime(AppState.currentStory.id, duration);
+            AppState.playbackStartTime = null;
+        }
     });
 
     DOM.audioPlayer.addEventListener('ended', () => {
         updatePlayButtonState(false);
+        if (AppState.playbackStartTime && AppState.currentStory) {
+            const duration = (Date.now() - AppState.playbackStartTime) / 1000;
+            trackPlaytime(AppState.currentStory.id, duration);
+            AppState.playbackStartTime = null;
+        }
         if (DOM.progressBar) DOM.progressBar.style.width = '0%';
         if (DOM.progressContainer) DOM.progressContainer.setAttribute('aria-valuenow', '0');
     });
@@ -325,12 +351,22 @@ function handleSwipe(diffX, diffY) {
 
 function nextStory() {
     if (AppState.stories.length === 0) return;
+    if (AppState.playbackStartTime && AppState.currentStory) {
+        const duration = (Date.now() - AppState.playbackStartTime) / 1000;
+        trackPlaytime(AppState.currentStory.id, duration);
+        AppState.playbackStartTime = null;
+    }
     AppState.currentStoryIndex = (AppState.currentStoryIndex + 1) % AppState.stories.length;
     loadStory(AppState.stories[AppState.currentStoryIndex]);
 }
 
 function previousStory() {
     if (AppState.stories.length === 0) return;
+    if (AppState.playbackStartTime && AppState.currentStory) {
+        const duration = (Date.now() - AppState.playbackStartTime) / 1000;
+        trackPlaytime(AppState.currentStory.id, duration);
+        AppState.playbackStartTime = null;
+    }
     AppState.currentStoryIndex = (AppState.currentStoryIndex - 1 + AppState.stories.length) % AppState.stories.length;
     loadStory(AppState.stories[AppState.currentStoryIndex]);
 }
@@ -443,9 +479,129 @@ document.body.addEventListener('touchmove', (e) => {
     e.preventDefault();
 }, { passive: false });
 
+// ===== ADMIN DASHBOARD =====
+let adminChart = null;
+
+function initAdminDashboard() {
+    const chartCanvas = document.getElementById('playtimeChart');
+    if (!chartCanvas) return;
+
+    const periodButtons = document.querySelectorAll('.admin-period-button');
+
+    async function loadAdminStats(period = '24h') {
+        try {
+            const response = await fetch(`/api/admin/stats?period=${period}`);
+            if (!response.ok) {
+                if (response.status === 401) {
+                    window.location.href = '/admin/login';
+                    return;
+                }
+                throw new Error('Failed to load stats');
+            }
+
+            const data = await response.json();
+            updateAdminChart(data.stats);
+        } catch (error) {
+            console.error('Error loading admin stats:', error);
+        }
+    }
+
+    function updateAdminChart(stats) {
+        const labels = stats.map(s => s.label);
+        const durations = stats.map(s => Math.round(s.value / 60));
+
+        if (adminChart) {
+            adminChart.data.labels = labels;
+            adminChart.data.datasets[0].data = durations;
+            adminChart.update();
+        } else {
+            adminChart = new Chart(chartCanvas, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Playtime (Minuten)',
+                        data: durations,
+                        backgroundColor: '#ff4444',
+                        borderColor: '#ff3333',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#ffffff', font: { size: 14 } }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Playtime: ${context.parsed.y} min`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#ffffff',
+                                callback: function(value) {
+                                    return value + ' min';
+                                }
+                            },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            title: {
+                                display: true,
+                                text: 'Playtime (Minuten)',
+                                color: '#ffffff'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: '#ffffff',
+                                maxRotation: 45,
+                                minRotation: 0
+                            },
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    periodButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            periodButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            loadAdminStats(button.dataset.period);
+        });
+    });
+
+    loadAdminStats('24h');
+}
+
+// Track playtime on page unload
+window.addEventListener('beforeunload', () => {
+    if (AppState.playbackStartTime && AppState.currentStory && AppState.isPlaying) {
+        const duration = (Date.now() - AppState.playbackStartTime) / 1000;
+        navigator.sendBeacon('/api/playtime', JSON.stringify({
+            story_id: AppState.currentStory.id,
+            play_duration: Math.floor(duration)
+        }));
+    }
+});
+
 // ===== INITIALIZE APP =====
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadStories);
+    document.addEventListener('DOMContentLoaded', () => {
+        loadStories();
+        initAdminDashboard();
+    });
 } else {
     loadStories();
+    initAdminDashboard();
 }

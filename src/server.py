@@ -1,14 +1,19 @@
-from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi import FastAPI, Request, Depends, HTTPException, status, Form
 from fastapi.templating import Jinja2Templates
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from config import STATIC_DIR, TEMPLATES_DIR, DATA_DIR
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from pathlib import Path
+from datetime import datetime, timedelta
+import database
 import argparse
 import uvicorn
 import json
 import random
+import os
+import secrets
 
 load_dotenv()
 
@@ -16,6 +21,31 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.mount("/data", StaticFiles(directory=str(DATA_DIR)), name="data")
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
+
+# Initialize database on startup
+@app.on_event("startup")
+async def startup_event():
+    database.init_database()
+    print("✓ Database initialized")
+
+# Admin authentication
+ADMIN_USER = os.getenv("USER", "admin")
+ADMIN_PASSWORD = os.getenv("PASSWORD", "admin")
+admin_sessions = {}  # session_token -> expiry_time
+
+def create_session():
+    token = secrets.token_urlsafe(32)
+    admin_sessions[token] = datetime.now() + timedelta(hours=24)
+    return token
+
+def verify_session(request: Request):
+    token = request.cookies.get("admin_session")
+    if not token or token not in admin_sessions:
+        return False
+    if admin_sessions[token] < datetime.now():
+        del admin_sessions[token]
+        return False
+    return True
 
 
 def get_all_stories():
@@ -75,6 +105,77 @@ async def get_random_story():
     if stories:
         return JSONResponse(content=random.choice(stories))
     return JSONResponse(content={"error": "No stories available"}, status_code=404)
+
+
+@app.post("/api/playtime")
+async def track_playtime(request: Request):
+    """Track playtime for analytics."""
+    try:
+        data = await request.json()
+        story_id = data.get("story_id")
+        play_duration = data.get("play_duration", 0)
+
+        if not story_id:
+            return JSONResponse(content={"error": "story_id required"}, status_code=400)
+
+        success = database.track_playtime(story_id, play_duration)
+
+        if success:
+            return JSONResponse(content={"success": True})
+        else:
+            return JSONResponse(content={"error": "Failed to track playtime"}, status_code=500)
+
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+
+# Admin routes
+@app.get("/admin/login", response_class=HTMLResponse)
+async def admin_login_page(request: Request):
+    """Serve admin login page."""
+    if verify_session(request):
+        return RedirectResponse(url="/admin", status_code=302)
+    return templates.TemplateResponse("admin_login.html", {"request": request})
+
+
+@app.post("/admin/login")
+async def admin_login(request: Request, username: str = Form(...), password: str = Form(...)):
+    """Handle admin login."""
+    if username == ADMIN_USER and password == ADMIN_PASSWORD:
+        token = create_session()
+        response = RedirectResponse(url="/admin", status_code=302)
+        response.set_cookie(key="admin_session", value=token, httponly=True, max_age=86400)
+        return response
+    return templates.TemplateResponse("admin_login.html", {"request": request, "error": "Ungültige Anmeldedaten"})
+
+
+@app.get("/admin/logout")
+async def admin_logout(request: Request):
+    """Handle admin logout."""
+    token = request.cookies.get("admin_session")
+    if token and token in admin_sessions:
+        del admin_sessions[token]
+    response = RedirectResponse(url="/admin/login", status_code=302)
+    response.delete_cookie("admin_session")
+    return response
+
+
+@app.get("/admin", response_class=HTMLResponse)
+async def admin_dashboard(request: Request):
+    """Serve admin dashboard."""
+    if not verify_session(request):
+        return RedirectResponse(url="/admin/login", status_code=302)
+    return templates.TemplateResponse("admin_dashboard.html", {"request": request})
+
+
+@app.get("/api/admin/stats")
+async def get_admin_stats(request: Request, period: str = "24h"):
+    """Get playtime statistics for admin dashboard."""
+    if not verify_session(request):
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    stats = database.get_stats_by_period(period)
+    return JSONResponse(content={"stats": stats, "period": period})
 
 
 if __name__ == "__main__":
