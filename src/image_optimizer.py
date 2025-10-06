@@ -35,7 +35,8 @@ def get_optimized_image(
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
     # Generate cache filename based on parameters
-    cache_key = f"{original_path.stem}_{width}_{quality}_{format.lower()}"
+    # Include parent directory (story ID) to make cache key unique per story
+    cache_key = f"{original_path.parent.name}_{original_path.stem}_{width}_{quality}_{format.lower()}"
     cache_hash = hashlib.md5(cache_key.encode()).hexdigest()[:16]
 
     extension = "webp" if format == "WEBP" else format.lower()

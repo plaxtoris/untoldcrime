@@ -7,14 +7,7 @@ from fastapi.templating import Jinja2Templates
 from pathlib import Path
 from datetime import datetime, timedelta
 from typing import Optional
-from config import (
-    STATIC_DIR,
-    TEMPLATES_DIR,
-    DATA_DIR,
-    ADMIN_USER,
-    ADMIN_PASSWORD,
-    SESSION_DURATION_HOURS
-)
+from config import STATIC_DIR, TEMPLATES_DIR, DATA_DIR, ADMIN_USER, ADMIN_PASSWORD, SESSION_DURATION_HOURS
 from utils import load_json
 import database
 import image_optimizer
@@ -114,13 +107,15 @@ def _get_all_stories() -> list[dict[str, str]]:
             logger.warning(f"Failed to load metadata for: {story_dir.name}")
             continue
 
-        stories.append({
-            "id": story_dir.name,
-            "title": metadata.get("title", "Unbekannt"),
-            "summary": metadata.get("summary", ""),
-            "audio_url": f"/data/{story_dir.name}/story.mp3",
-            "cover_url": f"/data/{story_dir.name}/cover.png"
-        })
+        stories.append(
+            {
+                "id": story_dir.name,
+                "title": metadata.get("title", "Unbekannt"),
+                "summary": metadata.get("summary", ""),
+                "audio_url": f"/data/{story_dir.name}/story.mp3",
+                "cover_url": f"/data/{story_dir.name}/cover.png",
+            }
+        )
 
     return stories
 
@@ -166,7 +161,7 @@ Sitemap: https://untoldcrime.com/sitemap.xml
 @app.get("/sitemap.xml", response_class=Response)
 async def sitemap_xml(request: Request):
     """Generate dynamic sitemap.xml for search engines."""
-    base_url = str(request.base_url).rstrip('/')
+    base_url = str(request.base_url).rstrip("/")
     stories = _get_all_stories()
 
     # Build sitemap XML
@@ -185,16 +180,18 @@ async def sitemap_xml(request: Request):
     <loc>{base_url}/impressum</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
-  </url>"""
+  </url>""",
     ]
 
     # Add story entries
     for story in stories:
-        urls.append(f"""  <url>
+        urls.append(
+            f"""  <url>
     <loc>{base_url}/api/stories#{story['id']}</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>""")
+  </url>"""
+        )
 
     sitemap = f"""<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -236,7 +233,7 @@ async def api_get_optimized_cover(
     story_id: str,
     width: int = Query(default=800, ge=100, le=2048, description="Target width in pixels"),
     quality: int = Query(default=85, ge=1, le=100, description="Image quality (1-100)"),
-    format: str = Query(default="webp", regex="^(webp|jpeg|png)$", description="Output format")
+    format: str = Query(default="webp", regex="^(webp|jpeg|png)$", description="Output format"),
 ):
     """Get optimized cover image for a story.
 
@@ -254,43 +251,29 @@ async def api_get_optimized_cover(
         original_path = Path(DATA_DIR) / story_id / "cover.png"
 
         if not original_path.exists():
-            return JSONResponse(
-                content={"error": "Cover image not found"},
-                status_code=404
-            )
+            return JSONResponse(content={"error": "Cover image not found"}, status_code=404)
 
         # Get or create optimized version
         format_upper = format.upper()
-        optimized_path = image_optimizer.get_optimized_image(
-            original_path=original_path,
-            width=width,
-            quality=quality,
-            format=format_upper
-        )
+        optimized_path = image_optimizer.get_optimized_image(original_path=original_path, width=width, quality=quality, format=format_upper)
 
         # Determine media type
-        media_types = {
-            "WEBP": "image/webp",
-            "JPEG": "image/jpeg",
-            "PNG": "image/png"
-        }
+        media_types = {"WEBP": "image/webp", "JPEG": "image/jpeg", "PNG": "image/png"}
         media_type = media_types.get(format_upper, "image/png")
 
         return FileResponse(
             path=optimized_path,
             media_type=media_type,
             headers={
-                "Cache-Control": "public, max-age=31536000",  # 1 year
-                "Vary": "Accept"
-            }
+                "Cache-Control": "public, max-age=3600000, must-revalidate",  # 1 hour with revalidation
+                "Vary": "Accept",
+                "ETag": f'"{story_id}-{width}-{quality}-{format}"',  # Unique ETag per combination
+            },
         )
 
     except Exception as e:
         logger.error(f"Error serving optimized image: {e}")
-        return JSONResponse(
-            content={"error": str(e)},
-            status_code=500
-        )
+        return JSONResponse(content={"error": str(e)}, status_code=500)
 
 
 @app.post("/api/playtime")
@@ -309,20 +292,14 @@ async def api_track_playtime(request: Request):
         play_duration = data.get("play_duration", 0)
 
         if not story_id:
-            return JSONResponse(
-                content={"error": "story_id required"},
-                status_code=400
-            )
+            return JSONResponse(content={"error": "story_id required"}, status_code=400)
 
         success = database.track_playtime(story_id, play_duration)
 
         if success:
             return JSONResponse(content={"success": True})
 
-        return JSONResponse(
-            content={"error": "Failed to track playtime"},
-            status_code=500
-        )
+        return JSONResponse(content={"error": "Failed to track playtime"}, status_code=500)
 
     except Exception as e:
         logger.error(f"Error tracking playtime: {e}")
@@ -341,11 +318,7 @@ async def admin_login_page(request: Request):
 
 
 @app.post("/admin/login")
-async def admin_login(
-    request: Request,
-    username: str = Form(...),
-    password: str = Form(...)
-):
+async def admin_login(request: Request, username: str = Form(...), password: str = Form(...)):
     """Handle admin login.
 
     Args:
@@ -359,20 +332,12 @@ async def admin_login(
     if username == ADMIN_USER and password == ADMIN_PASSWORD:
         token = _create_session()
         response = RedirectResponse(url="/admin", status_code=302)
-        response.set_cookie(
-            key="admin_session",
-            value=token,
-            httponly=True,
-            max_age=SESSION_DURATION_HOURS * 3600
-        )
+        response.set_cookie(key="admin_session", value=token, httponly=True, max_age=SESSION_DURATION_HOURS * 3600)
         logger.info(f"Admin login successful: {username}")
         return response
 
     logger.warning(f"Failed login attempt: {username}")
-    return templates.TemplateResponse(
-        "admin_login.html",
-        {"request": request, "error": "Ungültige Anmeldedaten"}
-    )
+    return templates.TemplateResponse("admin_login.html", {"request": request, "error": "Ungültige Anmeldedaten"})
 
 
 @app.get("/admin/logout")
@@ -415,10 +380,7 @@ async def api_admin_stats(request: Request, period: str = "24h"):
         JSON response with statistics
     """
     if not _verify_session(request):
-        return JSONResponse(
-            content={"error": "Unauthorized"},
-            status_code=401
-        )
+        return JSONResponse(content={"error": "Unauthorized"}, status_code=401)
 
     stats = database.get_stats_by_period(period)
     return JSONResponse(content={"stats": stats, "period": period})
@@ -430,25 +392,11 @@ async def api_admin_stats(request: Request, period: str = "24h"):
 def main() -> None:
     """Run the web server."""
     parser = argparse.ArgumentParser(description="untoldcrime web server")
-    parser.add_argument(
-        "--port",
-        type=int,
-        default=80,
-        help="Port to run the server on"
-    )
-    parser.add_argument(
-        "--reload",
-        action="store_true",
-        help="Enable auto-reload for development"
-    )
+    parser.add_argument("--port", type=int, default=80, help="Port to run the server on")
+    parser.add_argument("--reload", action="store_true", help="Enable auto-reload for development")
     args = parser.parse_args()
 
-    uvicorn.run(
-        "server:app",
-        host="0.0.0.0",
-        port=args.port,
-        reload=args.reload
-    )
+    uvicorn.run("server:app", host="0.0.0.0", port=args.port, reload=args.reload)
 
 
 if __name__ == "__main__":

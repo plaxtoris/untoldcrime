@@ -19,7 +19,8 @@
       "Bash(netstat:*)",
       "Bash(pkill:*)",
       "Bash(node:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(md5sum:*)"
     ],
     "deny": []
   }

@@ -199,9 +199,25 @@ function loadStory(story) {
     // Update UI
     if (DOM.coverImage) {
         const optimizedUrl = getOptimizedImageUrl(story.id, story.cover_url);
-        DOM.coverImage.style.backgroundImage = `url('${optimizedUrl}')`;
-        DOM.coverImage.setAttribute('role', 'img');
-        DOM.coverImage.setAttribute('aria-label', `Cover für ${story.title}`);
+        console.log('[DEBUG] Loading story:', story.id, 'Cover URL:', optimizedUrl);
+
+        // Remove the element completely and recreate it to force full reset
+        const parent = DOM.coverImage.parentElement;
+        const oldElement = DOM.coverImage;
+        const newElement = oldElement.cloneNode(false);
+
+        // Set new background image on cloned element
+        newElement.style.backgroundImage = `url('${optimizedUrl}')`;
+        newElement.setAttribute('role', 'img');
+        newElement.setAttribute('aria-label', `Cover für ${story.title}`);
+
+        // Replace old with new
+        parent.replaceChild(newElement, oldElement);
+
+        // Update DOM reference
+        DOM.coverImage = newElement;
+
+        console.log('[DEBUG] Cover image element replaced for:', story.id);
     }
     if (DOM.storyTitle) {
         DOM.storyTitle.textContent = story.title;
