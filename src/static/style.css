@@ -42,6 +42,13 @@ html, body {
     display: flex;
     align-items: center;
     gap: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.logo:hover {
+    opacity: 0.8;
 }
 
 .logo img {
@@ -86,6 +93,10 @@ html, body {
     }
 
     .menu {
+        display: none !important;
+    }
+
+    .close-button {
         display: none !important;
     }
 }
@@ -261,7 +272,7 @@ html, body {
 
 .story-content {
     position: fixed;
-    bottom: 160px;
+    bottom: 100px;
     left: 0;
     right: 0;
     padding: 30px 25px 20px;
@@ -294,16 +305,17 @@ html, body {
     background: rgba(15, 15, 15, 0.4);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    padding: 20px 25px calc(25px + env(safe-area-inset-bottom));
+    padding: 15px 25px calc(15px + env(safe-area-inset-bottom));
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 15px;
 }
 
 .play-button {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
     border-radius: 50%;
     background: #ff4444;
     border: none;
@@ -311,7 +323,6 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto;
     transition: transform 0.2s, background 0.2s;
     position: relative;
 }
@@ -325,8 +336,8 @@ html, body {
 }
 
 .play-icon, .pause-icon {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     fill: #ffffff;
     position: absolute;
     transition: opacity 0.2s;
@@ -342,6 +353,13 @@ html, body {
 
 .play-button.playing .pause-icon {
     opacity: 1;
+}
+
+.player-controls {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .progress-container {
@@ -442,7 +460,7 @@ html, body {
 .swipe-edge-left,
 .swipe-edge-right {
     position: fixed;
-    top: 50%;
+    top: 45%;
     transform: translateY(-50%);
     width: 60px;
     height: 120px;

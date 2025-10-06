@@ -12,10 +12,10 @@
 <body>
     <header class="header">
         <div class="header-content">
-            <div class="logo">
+            <a href="/" class="logo">
                 <img src="/static/logo.jpg" alt="deepcrime">
                 <span>deepcrime</span>
-            </div>
+            </a>
             <nav class="header-nav">
                 <a href="/about">Über Uns</a>
                 <a href="/impressum">Impressum</a>
@@ -66,12 +66,14 @@
                     <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
                 </svg>
             </button>
-            <div class="progress-container" id="progressContainer">
-                <div class="progress-bar" id="progressBar"></div>
-            </div>
-            <div class="time-display">
-                <span id="currentTime">00:00</span>
-                <span id="duration">00:00</span>
+            <div class="player-controls">
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="time-display">
+                    <span id="currentTime">00:00</span>
+                    <span id="duration">00:00</span>
+                </div>
             </div>
         </div>
     </main>
