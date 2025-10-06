@@ -565,7 +565,7 @@ html, body {
 .skip-button svg {
     width: 24px;
     height: 24px;
-    fill: var(--color-text-primary);
+    fill: var(--color-text-tertiary);
 }
 
 .play-icon, .pause-icon {
