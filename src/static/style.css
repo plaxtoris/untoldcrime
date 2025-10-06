@@ -373,6 +373,51 @@ html, body {
     padding-bottom: env(safe-area-inset-bottom);
 }
 
+/* Hero Intro */
+.hero-intro {
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    z-index: var(--z-content);
+    padding: var(--space-2xl) var(--space-xl);
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: var(--blur-md);
+    -webkit-backdrop-filter: var(--blur-md);
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hero-intro h1 {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin-bottom: var(--space-md);
+    line-height: var(--line-height-tight);
+}
+
+.hero-intro p {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-relaxed);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .hero-intro {
+        top: 70px;
+    }
+
+    .hero-intro h1 {
+        font-size: var(--font-size-4xl);
+    }
+
+    .hero-intro p {
+        font-size: var(--font-size-lg);
+    }
+}
+
 /* Story Slider */
 .story-slider {
     position: fixed;

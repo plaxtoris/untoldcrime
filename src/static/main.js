@@ -190,10 +190,44 @@ async function loadStories() {
     }
 }
 
+function updateStructuredData(story) {
+    // Remove existing story structured data
+    const existingScript = document.getElementById('story-structured-data');
+    if (existingScript) {
+        existingScript.remove();
+    }
+
+    // Create new structured data for current story
+    const structuredData = {
+        "@context": "https://schema.org",
+        "@type": "AudioObject",
+        "name": story.title,
+        "description": story.summary,
+        "contentUrl": window.location.origin + story.audio_url,
+        "thumbnailUrl": window.location.origin + story.cover_url,
+        "encodingFormat": "audio/mpeg",
+        "inLanguage": "de-DE",
+        "genre": ["True Crime", "Kriminalgeschichte", "Hörbuch"],
+        "keywords": "true crime deutsch, kriminalfall, deutsche verbrechen, hörbuch kostenlos",
+        "isFamilyFriendly": false,
+        "audience": {
+            "@type": "Audience",
+            "audienceType": "Adults"
+        }
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.id = 'story-structured-data';
+    script.textContent = JSON.stringify(structuredData);
+    document.head.appendChild(script);
+}
+
 function loadStory(story) {
     if (!story) return;
 
     AppState.currentStory = story;
+    updateStructuredData(story);
 
     // Update UI
     if (DOM.coverImage) {
@@ -206,7 +240,7 @@ function loadStory(story) {
 
         newElement.style.backgroundImage = `url('${finalUrl}')`;
         newElement.setAttribute('role', 'img');
-        newElement.setAttribute('aria-label', `Cover für ${story.title}`);
+        newElement.setAttribute('aria-label', `True Crime Cover: ${story.title} - Deutsche Kriminalgeschichte`);
 
         parent.replaceChild(newElement, oldElement);
         DOM.coverImage = newElement;
@@ -647,13 +681,37 @@ window.addEventListener('beforeunload', () => {
     }
 });
 
+// ===== HERO INTRO HANDLING =====
+function initHeroIntro() {
+    const heroIntro = document.querySelector('.hero-intro');
+    if (!heroIntro) return;
+
+    // Hide hero intro after 5 seconds on first visit
+    const hasVisited = localStorage.getItem('untoldcrime_visited');
+
+    if (hasVisited) {
+        heroIntro.style.display = 'none';
+    } else {
+        setTimeout(() => {
+            heroIntro.style.opacity = '0';
+            heroIntro.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+                heroIntro.style.display = 'none';
+                localStorage.setItem('untoldcrime_visited', 'true');
+            }, 500);
+        }, 5000);
+    }
+}
+
 // ===== INITIALIZE APP =====
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         loadStories();
         initAdminDashboard();
+        initHeroIntro();
     });
 } else {
     loadStories();
     initAdminDashboard();
+    initHeroIntro();
 }
