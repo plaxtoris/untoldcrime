@@ -17,20 +17,26 @@ logger = logging.getLogger(__name__)
 
 
 STORY_SETTINGS = [
-    # Digitale Abgründe & Moderne Verbrechen
-    "Mord im Smart Home: Ein Tech-Mogul stirbt in seiner vollautomatisierten Villa in Grünwald. Die Polizei vermutet einen Unfall, doch eine IT-Forensikerin entdeckt, dass das Haus selbst zur Tatwaffe umprogrammiert wurde.",
-    "Rache für die Oma: Nachdem ihre Großmutter von einem 'Love Scammer' ausgenommen wird, nutzt eine junge Datenanalystin ihre Fähigkeiten, um den Betrüger digital zu jagen – und stößt auf ein internationales Geldwäsche-Netzwerk.",
-    "Game Over in Köln: Ein E-Sport-Profi stirbt vor einem wichtigen Finale an einer Überdosis Aufputschmittel. Sein größter Rivale gerät in Verdacht, doch die Spur führt zu einem Wettsyndikat, das Matches manipuliert.",
-    # Gesellschaftliche Risse & Subkulturen
-    "Tod im Bunker: Der Anführer einer Prepper-Gruppe in der Eifel wird tot in seinem unterirdischen Versteck gefunden. Die Ermittler tauchen ein in eine Welt aus Paranoia, Verschwörungstheorien und internen Machtkämpfen.",
-    "Burnout oder Mord? Der verdächtige Suizid eines Entwicklers in der Berliner Startup-Szene. Ein Whistleblower behauptet, der gefeierte CEO habe ihn durch toxische 'Hustle Culture' in den Tod getrieben.",
-    "Radikaler Umweltschutz mit Todesfolge: Ein Aktivist, der eine Firma in der Lausitz sabotiert hat, wird ermordet. War es die Rache des Konzerns oder ein interner Konflikt in der eskalierenden Bewegung?",
-    # Psychologische Twists & Familiendramen
-    "Tödliche Erleuchtung: Ein Mitglied eines exklusiven Selbsthilfe-Kults stirbt bei einem Ritual in einer Villa im Taunus. Während die Anhänger von einem Unfall sprechen, schleust die Familie des Opfers einen Privatdetektiv in die sektenartige Gemeinschaft ein.",
-    "Die falsche Schwester: Jahrzehnte nach einer Entführung taucht eine Frau auf, die per DNA-Test als die vermisste Schwester identifiziert wird. Doch ein misstrauischer Bruder deckt auf, dass die 'Heimkehrerin' eine Betrügerin mit einem tödlichen Plan ist.",
-    # Klassische Verbrechen im neuen Gewand
-    "Das gefälschte Meisterwerk: Ein renommierter Kunstexperte wird in München ermordet, kurz nachdem er ein wiederentdecktes Gemälde als Sensation gefeiert hat. Die Ermittlungen enthüllen einen Fälscherring in den höchsten Kreisen des Kunstmarktes.",
-    "Der Fluch des Lottogewinns: Eine Tippgemeinschaft aus einem Dorf in Brandenburg gewinnt den Jackpot. Kurz darauf stirbt ein Mitglied nach dem anderen durch seltsame 'Unfälle'. Ein klassischer Fall von Gier – oder steckt mehr dahinter?",
+    "Der letzte Stream: Eine erfolgreiche Influencerin aus Hamburg wird live während ihres Streams bewusstlos – die Kamera läuft weiter. Tausende Follower sind Zeugen, doch niemand weiß: War es ein medizinischer Notfall oder inszenierter Mord vor laufender Kamera?",
+    "Kaltblütig kalkuliert: Ein Investmentbanker verschwindet spurlos aus seinem Büro im Frankfurter Bankenviertel. Seine Kollegin entdeckt, dass er Milliarden in Kryptowährungen verschoben hat – war es Flucht oder wurde er eliminiert, bevor er auspacken konnte?",
+    "Tod auf der Wiesn: Während des Oktoberfests stirbt ein Festzelt-Wirt unter mysteriösen Umständen. Die Ermittlungen fördern einen erbitterten Kampf um die lukrativen Standplätze und eine jahrzehntealte Familienfehde zutage.",
+    "Der Schatten der Vergangenheit: In Dresden wird die Leiche eines pensionierten Lehrers gefunden – mit Stasi-Akten in seiner Hand. Ein investigativer Journalist deckt auf, dass mehrere seiner ehemaligen Kollegen ebenfalls verschwunden sind.",
+    "Blutige Pisten: Ein russischer Oligarch verunglückt tödlich beim Après-Ski in Garmisch. Sein Bodyguard behauptet, es war Mord. Die Ermittlungen enthüllen ein Netzwerk aus Geldwäsche, gestohlenen Kunstschätzen und Geheimdiensten.",
+    "Dark Web Roulette: Ein Programmierer aus Leipzig wird tot aufgefunden, sein Laptop verschlüsselt. Die Cyber-Kripo entdeckt, dass er Zugang zu einem illegalen Dark-Web-Marktplatz hatte – und zu viel über die Betreiber wusste.",
+    "Die Schattenseite des Erfolgs: Eine gefeierte Fernsehmoderatorin stürzt von ihrem Balkon in Potsdam. Selbstmord wegen Burn-out? Doch ihre Assistentin findet Beweise für systematisches Stalking und einen obsessiven Fan.",
+    "Tödliche Diagnose: In einer Hamburger Privatklinik sterben innerhalb von Wochen drei Patienten an 'Komplikationen'. Eine Krankenschwester wird misstrauisch und stößt auf einen Organhandel-Ring mit Verbindungen bis in die Klinikleitung.",
+    "Der Flüsterer von Sylt: Ein Immobilienmakler, der die Superreichen der Insel berät, wird ermordet aufgefunden. Seine verschlüsselten Notizen offenbaren Erpressungen, illegale Bauvorhaben und dunkle Geheimnisse der Elite.",
+    "Autobahnmord A9: Ein Fernfahrer findet eine Leiche im Container seines LKW. Die Spurensuche führt quer durch Deutschland und deckt einen internationalen Menschenhandel-Ring auf, der die Autobahnen als unsichtbare Routen nutzt.",
+    "Tod im Yoga-Retreat: Eine Wellness-Influencerin stirbt während eines teuren Detox-Retreats in den bayerischen Alpen. Die Polizei vermutet vergiftete Kräuter, doch die Wahrheit liegt in ihrer verschwiegenen Vergangenheit als Pharma-Whistleblowerin.",
+    "Der Algorithmus des Todes: Ein KI-Forscher in München wird tot in seinem Labor gefunden. Seine letzte Entwicklung: ein Algorithmus, der angeblich Verbrechen vorhersagen kann. Hat seine KI seinen eigenen Mord vorhergesagt?",
+    "Blutgeld im Kleingartenverein: In einer Stuttgarter Schrebergartenkolonie wird ein beliebter Vereinsvorsitzender erschlagen. Die idyllische Fassade bröckelt: Drogenanbau, illegales Glücksspiel und ein Netz aus Lügen kommen ans Licht.",
+    "Die Rache der Ghostwriterin: Eine erfolgreiche Bestseller-Autorin stirbt bei einem inszenierten Autounfall. Ihre unbekannte Ghostwriterin wird zur Hauptverdächtigen – doch hat sie wirklich gemordet oder deckt sie einen literarischen Betrug auf?",
+    "Todesfall Pflegeheim: In einem Nürnberger Seniorenheim häufen sich mysteriöse Todesfälle. Eine neue Pflegekraft deckt auf, dass Angehörige die Erbschaften beschleunigen wollten – mit tödlicher Hilfe eines korrupten Arztes.",
+    "Der Skandal von St. Pauli: Ein Nachtclub-Besitzer wird auf der Reeperbahn exekutiert. Die Ermittlungen offenbaren einen Machtkampf zwischen rivalisierenden Clans, die um die Kontrolle des Rotlichtmilieus kämpfen.",
+    "Mord im Escape Room: Eine Gruppe Studenten spielt in einem Kölner Escape Room – einer von ihnen überlebt nicht. War es ein tragischer Unfall oder hat jemand das Spiel in eine tödliche Falle verwandelt? Die Überwachungskameras wurden manipuliert.",
+    "Der Fall des Flüchtlingshelfers: Ein engagierter Sozialarbeiter in Berlin wird ermordet. Hat er zu viel über die Machenschaften in einem Asylheim erfahren? Die Spur führt zu korrupten Behörden und organisierten Schlepperbanden.",
+    "Tödliche Likes: Ein aufstrebender TikToker aus Düsseldorf stirbt bei einem waghalsigen Stunt. Zufall oder wurde er von einem eifersüchtigen Konkurrenten manipuliert? Die digitale Forensik enthüllt einen Psychokrieg in den sozialen Medien.",
+    "Das Vermächtnis des Winzers: Auf einem renommierten Weingut an der Mosel wird der Besitzer tot in seinem Weinkeller gefunden. Seine drei Kinder kämpfen ums Erbe – doch einer von ihnen hat ein tödliches Geheimnis zu verbergen.",
 ]
 
 
