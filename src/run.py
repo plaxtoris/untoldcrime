@@ -63,7 +63,7 @@ if __name__ == "__main__":
     #     for future in tqdm(as_completed(futures), total=len(settings), desc="Generating stories"):
     #         future.result()
 
-    generate(model="gemini-2.5-pro", word_limit=500, setting=settings[1])
+    generate(model="gemini-2.5-pro", word_limit=2500, setting=settings[1])
     # count_data()
     # clean_data()
     print(f"\n>>> runtime {(time.time() - t0):.1f} sec\n\n")
