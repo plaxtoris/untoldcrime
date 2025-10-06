@@ -1,7 +1,7 @@
 """FastAPI web server for the True Crime story application."""
 
 from fastapi import FastAPI, Request, Form, Query
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, FileResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
@@ -144,6 +144,64 @@ async def impressum_page(request: Request):
 async def about_page(request: Request):
     """Serve the about page."""
     return templates.TemplateResponse("about.html", {"request": request})
+
+
+@app.get("/robots.txt", response_class=Response)
+async def robots_txt():
+    """Serve robots.txt for search engine crawlers."""
+    content = """User-agent: *
+Allow: /
+Allow: /about
+Allow: /impressum
+Allow: /api/stories
+Disallow: /admin
+Disallow: /api/admin
+Disallow: /data/
+
+Sitemap: https://untoldcrime.com/sitemap.xml
+"""
+    return Response(content=content, media_type="text/plain")
+
+
+@app.get("/sitemap.xml", response_class=Response)
+async def sitemap_xml(request: Request):
+    """Generate dynamic sitemap.xml for search engines."""
+    base_url = str(request.base_url).rstrip('/')
+    stories = _get_all_stories()
+
+    # Build sitemap XML
+    urls = [
+        f"""  <url>
+    <loc>{base_url}/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>""",
+        f"""  <url>
+    <loc>{base_url}/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>""",
+        f"""  <url>
+    <loc>{base_url}/impressum</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>"""
+    ]
+
+    # Add story entries
+    for story in stories:
+        urls.append(f"""  <url>
+    <loc>{base_url}/api/stories#{story['id']}</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>""")
+
+    sitemap = f"""<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{chr(10).join(urls)}
+</urlset>"""
+
+    return Response(content=sitemap, media_type="application/xml")
 
 
 # ===== API ROUTES =====

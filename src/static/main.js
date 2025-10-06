@@ -200,6 +200,8 @@ function loadStory(story) {
     if (DOM.coverImage) {
         const optimizedUrl = getOptimizedImageUrl(story.id, story.cover_url);
         DOM.coverImage.style.backgroundImage = `url('${optimizedUrl}')`;
+        DOM.coverImage.setAttribute('role', 'img');
+        DOM.coverImage.setAttribute('aria-label', `Cover für ${story.title}`);
     }
     if (DOM.storyTitle) {
         DOM.storyTitle.textContent = story.title;

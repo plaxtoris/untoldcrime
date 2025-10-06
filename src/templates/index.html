@@ -14,10 +14,39 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Spannende True Crime Geschichten zum Anhören. KI-generierte deutsche Kriminalfälle mit emotionaler Tiefe. Kostenlos streamen auf untoldcrime.">
+    <meta name="keywords" content="True Crime, Kriminalfälle, Crime Podcast, deutsche True Crime, Kriminalgeschichten, True Crime deutsch, Audio Stories, Crime Stories">
+    <meta name="author" content="untoldcrime">
+    <meta name="language" content="de">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <link rel="canonical" href="https://untoldcrime.com/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://untoldcrime.com/">
+    <meta property="og:title" content="untoldcrime - True Crime Stories zum Anhören">
+    <meta property="og:description" content="Spannende True Crime Geschichten zum Anhören. KI-generierte deutsche Kriminalfälle mit emotionaler Tiefe. Kostenlos streamen.">
+    <meta property="og:image" content="https://untoldcrime.com/static/logo.svg">
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:site_name" content="untoldcrime">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://untoldcrime.com/">
+    <meta name="twitter:title" content="untoldcrime - True Crime Stories zum Anhören">
+    <meta name="twitter:description" content="Spannende True Crime Geschichten zum Anhören. KI-generierte deutsche Kriminalfälle mit emotionaler Tiefe.">
+    <meta name="twitter:image" content="https://untoldcrime.com/static/logo.svg">
+
+    <!-- Mobile & PWA -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="untoldcrime">
     <meta name="theme-color" content="#0a0a0a">
-    <title>untoldcrime - True Crime Stories</title>
+    <meta name="format-detection" content="telephone=no">
+
+    <title>untoldcrime - True Crime Stories zum Anhören | Deutsche Kriminalfälle</title>
     <link rel="icon" type="image/svg+xml" href="/static/logo.svg">
     <link rel="stylesheet" href="/static/style.css">
 </head>
@@ -48,15 +77,31 @@
         </ul>
     </nav>
 
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "untoldcrime",
+      "url": "https://untoldcrime.com",
+      "description": "Spannende True Crime Geschichten zum Anhören",
+      "inLanguage": "de-DE",
+      "publisher": {
+        "@type": "Organization",
+        "name": "untoldcrime"
+      }
+    }
+    </script>
+
     <main class="container" id="container">
         <div class="story-slider" id="storySlider">
-            <div class="story-card" id="storyCard">
+            <article class="story-card" id="storyCard" itemscope itemtype="https://schema.org/AudioObject">
                 <div class="cover-image" id="coverImage"></div>
                 <div class="story-content">
-                    <h1 class="story-title" id="storyTitle">Lädt...</h1>
-                    <p class="story-summary" id="storySummary"></p>
+                    <h1 class="story-title" id="storyTitle" itemprop="name">Lädt...</h1>
+                    <p class="story-summary" id="storySummary" itemprop="description"></p>
                 </div>
-            </div>
+            </article>
         </div>
 
         <button class="swipe-edge-left" id="swipeEdgeLeft" aria-label="Vorherige Story" tabindex="0">
