@@ -121,6 +121,15 @@
         </button>
 
         <div class="audio-player" role="region" aria-label="Audio-Player">
+            <div class="progress-section">
+                <div class="progress-container" id="progressContainer" role="slider" aria-label="Audio-Fortschritt" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="time-markers">
+                    <time class="time-display" id="currentTime" aria-label="Aktuelle Zeit">00:00</time>
+                    <time class="time-display" id="duration" aria-label="Gesamtdauer">00:00</time>
+                </div>
+            </div>
             <div class="playback-controls">
                 <button class="skip-button" id="skipBackButton" aria-label="10 Sekunden zurück">
                     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -142,13 +151,6 @@
                         <text x="12" y="16" text-anchor="middle" font-size="7" font-weight="bold" fill="rgba(255, 255, 255, 0.6)">10</text>
                     </svg>
                 </button>
-            </div>
-            <div class="player-controls">
-                <time class="time-display" id="currentTime" aria-label="Aktuelle Zeit">00:00</time>
-                <div class="progress-container" id="progressContainer" role="slider" aria-label="Audio-Fortschritt" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
-                <time class="time-display" id="duration" aria-label="Gesamtdauer">00:00</time>
             </div>
         </div>
     </main>
