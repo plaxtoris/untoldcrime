@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Untold Crime</title>
+    <link rel="icon" type="image/svg+xml" href="/static/logo.svg">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <div class="admin-dashboard-container">
+        <div class="admin-header">
+            <div class="admin-header-content">
+                <h1>Admin Dashboard</h1>
+                <a href="/admin/logout" class="admin-logout-button">Abmelden</a>
+            </div>
+        </div>
+
+        <div class="admin-content">
+            <div class="admin-stats-header">
+                <h2>Playtime Statistiken</h2>
+                <div class="admin-period-selector">
+                    <button class="admin-period-button active" data-period="24h">24h</button>
+                    <button class="admin-period-button" data-period="7d">7 Tage</button>
+                    <button class="admin-period-button" data-period="30d">30 Tage</button>
+                    <button class="admin-period-button" data-period="alltime">Alles</button>
+                </div>
+            </div>
+
+            <div class="admin-chart-container">
+                <canvas id="playtimeChart"></canvas>
+            </div>
+
+            <div class="admin-back-link">
+                <a href="/">← Zurück zur Startseite</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/main.js"></script>
+</body>
+</html>

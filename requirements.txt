@@ -1,1 +1,13 @@
-# No Python dependencies needed for C++ game development
+fastapi
+uvicorn[standard]
+jinja2
+pandas
+numpy
+pydub
+tqdm
+requests
+python-multipart
+google-cloud-texttospeech
+google-cloud-storage
+mutagen
+pillow

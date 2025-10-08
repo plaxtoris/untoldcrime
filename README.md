@@ -1,2 +1,2 @@
-# gamedev
-Playground for gamedev.
+# untoldcrime
+A user-friendly web app for AI-generated crime stories
